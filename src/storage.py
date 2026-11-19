@@ -109,6 +109,20 @@ class StateDB:
                 download_link TEXT DEFAULT '',
                 synced_at TEXT NOT NULL
             );
+
+            CREATE TABLE IF NOT EXISTS reminders (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                course_name TEXT DEFAULT '',
+                category TEXT DEFAULT 'recordatorio',
+                event_date TEXT NOT NULL,
+                event_time TEXT DEFAULT '09:00',
+                recurrence TEXT DEFAULT 'none',
+                notes TEXT DEFAULT '',
+                completed INTEGER DEFAULT 0,
+                created_by TEXT DEFAULT 'admin',
+                created_at TEXT NOT NULL
+            );
             """
         )
         self.conn.commit()
@@ -487,6 +501,62 @@ class StateDB:
                 "SELECT * FROM gdrive_files ORDER BY course_folder, folder_path, name"
             ).fetchall()
         return [dict(r) for r in rows]
+
+    # --- Calendar & Reminders ---
+    def list_reminders(self) -> List[Dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT * FROM reminders ORDER BY event_date ASC, event_time ASC, id DESC"
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def add_reminder(
+        self,
+        title: str,
+        event_date: str,
+        event_time: str = "09:00",
+        course_name: str = "",
+        category: str = "recordatorio",
+        recurrence: str = "none",
+        notes: str = "",
+        created_by: str = "admin",
+    ) -> Dict[str, Any]:
+        now = datetime.now().isoformat(timespec="seconds")
+        cur = self.conn.cursor()
+        cur.execute(
+            """
+            INSERT INTO reminders
+            (title, course_name, category, event_date, event_time, recurrence, notes, completed, created_by, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+            """,
+            (
+                title.strip(),
+                course_name.strip(),
+                category.strip() or "recordatorio",
+                event_date.strip(),
+                event_time.strip() or "09:00",
+                recurrence.strip() or "none",
+                notes.strip(),
+                created_by,
+                now,
+            ),
+        )
+        self.conn.commit()
+        rid = cur.lastrowid
+        row = self.conn.execute("SELECT * FROM reminders WHERE id = ?", (rid,)).fetchone()
+        return dict(row) if row else {}
+
+    def toggle_reminder(self, reminder_id: int, completed: bool) -> Optional[Dict[str, Any]]:
+        self.conn.execute(
+            "UPDATE reminders SET completed = ? WHERE id = ?",
+            (1 if completed else 0, reminder_id),
+        )
+        self.conn.commit()
+        row = self.conn.execute("SELECT * FROM reminders WHERE id = ?", (reminder_id,)).fetchone()
+        return dict(row) if row else None
+
+    def delete_reminder(self, reminder_id: int) -> None:
+        self.conn.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
+        self.conn.commit()
 
     # --- Existing Downloader State Tracking ---
     def is_file_downloaded(self, file_key: str, etag: Optional[str] = None) -> bool:

@@ -36,6 +36,7 @@ from src.gdrive import (
     parse_local_catalog,
     sync_from_gdrive,
 )
+from src.local_ai import answer_question, build_gcal_url
 from src.storage import StateDB
 
 WEB_DIR = Path(__file__).resolve().parent / "src" / "web"
@@ -430,7 +431,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 broadcast_event("presence_update", get_presence_snapshot())
             return
 
-        # 4. Public / Session Bootstrap info (lists available profiles so user can sign in or switch)
+        # 4. Public / Session Bootstrap info (requires explicit login)
         if path == "/api/auth/session":
             db = StateDB()
             try:
@@ -447,42 +448,6 @@ class DashboardHandler(BaseHTTPRequestHandler):
                     }
                     for u in all_users
                 ]
-
-                # Auto-create session on first visit so real-time presence & Admin control work immediately
-                if not ver and qs.get("auto", ["1"])[0] == "1":
-                    client_ip = self._client_ip()
-                    is_local = client_ip in ("127.0.0.1", "::1", "localhost")
-                    default_user = None
-                    if is_local:
-                        default_user = next((u for u in all_users if u["role"] == "admin"), None)
-                    if not default_user:
-                        default_user = next((u for u in all_users if u["role"] != "admin" and u["is_allowed"]), None)
-                    if not default_user and all_users:
-                        default_user = all_users[0]
-
-                    if default_user:
-                        tok = secrets.token_hex(20)
-                        now_str = datetime.now().strftime("%H:%M:%S")
-                        db.touch_web_user(default_user["id"])
-                        with SESSIONS_LOCK:
-                            SESSIONS[tok] = {
-                                "token": tok,
-                                "user_id": default_user["id"],
-                                "username": default_user["username"],
-                                "name": default_user["name"],
-                                "role": default_user["role"],
-                                "avatar_color": default_user.get("avatar_color") or "#3b82f6",
-                                "ip": client_ip,
-                                "connected_at": now_str,
-                                "last_seen": now_str,
-                                "last_seen_ts": time.time(),
-                                "current_view": "Cursos",
-                            }
-                        ver = {
-                            "token": tok,
-                            "user": default_user,
-                            "is_allowed": bool(default_user["is_allowed"]),
-                        }
 
                 if ver:
                     u = ver["user"]
@@ -511,6 +476,101 @@ class DashboardHandler(BaseHTTPRequestHandler):
                             "profiles": users_public,
                         }
                     )
+            finally:
+                db.close()
+            return
+
+        if path == "/api/calendar":
+            db = StateDB()
+            try:
+                reminders = db.list_reminders()
+                for r in reminders:
+                    r["gcal_url"] = build_gcal_url(
+                        r["title"],
+                        r["event_date"],
+                        r["event_time"],
+                        f"Curso: {r.get('course_name', '')} | {r.get('notes', '')}",
+                    )
+                cat = parse_local_catalog(db)
+                deadlines = []
+                for t in cat["tasks"]:
+                    fin = (t.get("finishAt") or "").strip()
+                    if len(fin) >= 10 and fin[0].isdigit():
+                        d_str = fin[:10]
+                        t_str = fin[11:16] if len(fin) >= 16 else "23:59"
+                        deadlines.append(
+                            {
+                                "id": f"utp-{t.get('activityTitle','')}",
+                                "title": f"[{t.get('type','TAREA')}] {t.get('activityTitle','')}",
+                                "course_name": t.get("courseName", ""),
+                                "category": "tarea",
+                                "event_date": d_str,
+                                "event_time": t_str,
+                                "source": "utp",
+                                "gcal_url": build_gcal_url(
+                                    f"[{t.get('type','TAREA')}] {t.get('activityTitle','')}",
+                                    d_str,
+                                    t_str,
+                                    f"Curso UTP+: {t.get('courseName', '')}",
+                                ),
+                            }
+                        )
+                self._send_json(
+                    {
+                        "reminders": reminders,
+                        "deadlines": deadlines,
+                    }
+                )
+            finally:
+                db.close()
+            return
+
+        if path == "/api/calendar/ics":
+            db = StateDB()
+            try:
+                reminders = db.list_reminders()
+                cat = parse_local_catalog(db)
+                ics_lines = [
+                    "BEGIN:VCALENDAR",
+                    "VERSION:2.0",
+                    "PRODID:-//UTP+ Cloud Panel//ES",
+                    "CALSCALE:GREGORIAN",
+                    "X-WR-CALNAME:UTP+ Clases y Entregas",
+                ]
+                for r in reminders:
+                    dt_clean = r["event_date"].replace("-", "") + "T" + r["event_time"].replace(":", "") + "00"
+                    ics_lines.extend(
+                        [
+                            "BEGIN:VEVENT",
+                            f"UID:rem-{r['id']}@utpcloud",
+                            f"DTSTART:{dt_clean}",
+                            f"SUMMARY:{r['title']} ({r.get('course_name', 'UTP+')})",
+                            f"DESCRIPTION:{r.get('notes', '')}",
+                            "END:VEVENT",
+                        ]
+                    )
+                for idx, t in enumerate(cat["tasks"]):
+                    fin = (t.get("finishAt") or "").strip()
+                    if len(fin) >= 10 and fin[0].isdigit():
+                        d_str = fin[:10].replace("-", "")
+                        t_str = (fin[11:16] if len(fin) >= 16 else "23:59").replace(":", "")
+                        ics_lines.extend(
+                            [
+                                "BEGIN:VEVENT",
+                                f"UID:utptask-{idx}@utpcloud",
+                                f"DTSTART:{d_str}T{t_str}00",
+                                f"SUMMARY:[{t.get('type','UTP')}] {t.get('activityTitle','')} - {t.get('courseName','')}",
+                                "END:VEVENT",
+                            ]
+                        )
+                ics_lines.append("END:VCALENDAR")
+                raw = "\r\n".join(ics_lines).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/calendar; charset=utf-8")
+                self.send_header("Content-Disposition", 'attachment; filename="utp_calendario.ics"')
+                self.send_header("Content-Length", str(len(raw)))
+                self.end_headers()
+                self.wfile.write(raw)
             finally:
                 db.close()
             return
@@ -1105,7 +1165,79 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self._send_json({"ok": True})
             return
 
-        # 11. UTP+class Sync Trigger
+        # 11. Local AI Assistant & Calendar Reminders
+        if path == "/api/ai/ask":
+            query = (body.get("query") or "").strip()
+            db = StateDB()
+            try:
+                ver = self._verify_session(db, qs)
+                uname = ver["user"]["username"] if ver else "admin"
+                result = answer_question(query, db, username=uname)
+                if result.get("reminder_created"):
+                    broadcast_event("calendar_updated", {"reminder": result["reminder_created"]})
+                self._send_json({"ok": True, **result})
+            finally:
+                db.close()
+            return
+
+        if path == "/api/calendar/add":
+            db = StateDB()
+            try:
+                ver = self._verify_session(db, qs)
+                uname = ver["user"]["username"] if ver else "admin"
+                title = (body.get("title") or "").strip()
+                event_date = (body.get("event_date") or datetime.now().strftime("%Y-%m-%d")).strip()
+                event_time = (body.get("event_time") or "09:00").strip()
+                course_name = (body.get("course_name") or "").strip()
+                category = (body.get("category") or "recordatorio").strip()
+                recurrence = (body.get("recurrence") or "none").strip()
+                notes = (body.get("notes") or "").strip()
+                if not title:
+                    self._send_json({"ok": False, "error": "El título es obligatorio."}, status=400)
+                    return
+                created = db.add_reminder(
+                    title=title,
+                    event_date=event_date,
+                    event_time=event_time,
+                    course_name=course_name,
+                    category=category,
+                    recurrence=recurrence,
+                    notes=notes,
+                    created_by=uname,
+                )
+                created["gcal_url"] = build_gcal_url(
+                    created["title"], created["event_date"], created["event_time"], f"Curso: {course_name}"
+                )
+                broadcast_event("calendar_updated", {"reminder": created})
+                self._send_json({"ok": True, "reminder": created})
+            finally:
+                db.close()
+            return
+
+        if path == "/api/calendar/toggle":
+            db = StateDB()
+            try:
+                rid = int(body.get("id", 0))
+                completed = bool(body.get("completed", True))
+                updated = db.toggle_reminder(rid, completed)
+                broadcast_event("calendar_updated", {"id": rid})
+                self._send_json({"ok": True, "reminder": updated})
+            finally:
+                db.close()
+            return
+
+        if path == "/api/calendar/delete":
+            db = StateDB()
+            try:
+                rid = int(body.get("id", 0))
+                db.delete_reminder(rid)
+                broadcast_event("calendar_updated", {"id": rid})
+                self._send_json({"ok": True})
+            finally:
+                db.close()
+            return
+
+        # 12. UTP+class Sync Trigger
         if path == "/api/sync":
             course_filter = body.get("course", "")
             all_cycles = bool(body.get("all_cycles", False))
