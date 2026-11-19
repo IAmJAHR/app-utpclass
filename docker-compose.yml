@@ -1,0 +1,23 @@
+services:
+  utp-cloud-panel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: utp-cloud-panel
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - HEADLESS=true
+      - NO_BROWSER=1
+      - UTP_USERNAME=${UTP_USERNAME:-}
+      - UTP_PASSWORD=${UTP_PASSWORD:-}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - GDRIVE_FOLDER_ID=${GDRIVE_FOLDER_ID:-1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx}
+      - GDRIVE_API_KEY=${GDRIVE_API_KEY:-}
+    volumes:
+      - ./data:/app/data
+      - ./downloads:/app/downloads

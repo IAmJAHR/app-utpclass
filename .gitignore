@@ -1,0 +1,32 @@
+.venv/
+.env
+debug/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Ignore sensitive/runtime data except the Google Drive manifest
+data/*
+!data/gdrive_manifest.json
+
+# Ignore heavy binaries in downloads/ (served from Google Drive) while keeping lightweight .md, .html, and 00_Silabo.pdf
+downloads/**/*.mp4
+downloads/**/*.mp3
+downloads/**/*.wav
+downloads/**/*.mov
+downloads/**/*.avi
+downloads/**/*.mkv
+downloads/**/*.webm
+downloads/**/*.pptx
+downloads/**/*.ppt
+downloads/**/*.docx
+downloads/**/*.doc
+downloads/**/*.xlsx
+downloads/**/*.xls
+downloads/**/*.zip
+downloads/**/*.rar
+downloads/**/*.png
+downloads/**/*.jpg
+downloads/**/*.jpeg
+downloads/**/*.pdf
+!downloads/**/00_Silabo.pdf

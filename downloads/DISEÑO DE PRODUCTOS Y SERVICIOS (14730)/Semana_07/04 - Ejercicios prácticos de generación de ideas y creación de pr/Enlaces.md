@@ -1,0 +1,4 @@
+# Enlaces - 04 - Ejercicios prácticos de generación de ideas y creación de propuestas de valor
+
+- [📚 Ejercicio práctico de generación de ideas y creación de propuestas de valor (multimedia 1)](https://utp-prd-upload-file-storage.s3.amazonaws.com/pao/content/c0bf259f-149d-4a73-9298-97495f42b998/Semana%207%20-%20Video%20-%20Ejercicio%20pr%C3%A1ctico%20de%20generaci%C3%B3n%20de%20ideas%20y%20creaci%C3%B3n%20de%20propuestas%20de%20valor_PJPXMS.mp4)
+- [📚 Ejercicio práctico de generación de ideas y creación de propuestas de valor (multimedia 2)](https://utp-prd-upload-file-storage.s3.amazonaws.com/pao/content/651f9247-6d42-4b09-9cd9-469b722ec8e4/Semana%207%20-%20Audio%20-%20Ejercicio%20pr%C3%A1ctico%20de%20generaci%C3%B3n%20de%20ideas%20y%20creaci%C3%B3n%20de%20propuestas%20de%20valor_DYYIBR.mp3)

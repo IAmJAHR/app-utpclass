@@ -1,0 +1,6 @@
+# Enlaces - 01 - El papel del equipo en las organizaciones modernas 
+
+- [📚 Relevancia de los equipos en el contexto organizacional actual (multimedia 1)](https://utp-prd-upload-file-storage.s3.amazonaws.com/pao/content/788a4cc6-902e-4d7d-afde-f307882a0b32/Semana%2002%20-%20Video%20-%20Relevancia%20De%20Los%20Equipos%20En%20El%20Contexto%20Organizacional%20Actual_XFAZIT.mp4)
+- [📚 Relevancia de los equipos en el contexto organizacional actual (multimedia 2)](https://utp-prd-upload-file-storage.s3.amazonaws.com/pao/content/2597a996-2abb-426c-aaf5-e84839b624de/Semana%2002%20-%20Audio%20-%20Relevancia%20de%20los%20equipos%20en%20el%20contexto%20organizacional%20actual_SLUVOG.mp3)
+- [📚 Dinámicas y funcionamiento interno de los equipos (multimedia 1)](https://utp-prd-upload-file-storage.s3.amazonaws.com/pao/content/02081a3e-7ef6-46cc-8c68-2c9df7a7e41a/Semana%2002%20-%20Video%20-%20Din%C3%A1micas%20Y%20Funcionamiento%20Interno%20De%20Los%20Equipos_TOCRSE.mp4)
+- [📚 Dinámicas y funcionamiento interno de los equipos (multimedia 2)](https://utp-prd-upload-file-storage.s3.amazonaws.com/pao/content/1952b3cc-4be0-4989-8e26-68fc5e4a5faa/Semana%2002%20-%20Audio%20-%20Din%C3%A1micas%20y%20funcionamiento%20interno%20de%20los%20equipos_AAXJQL.mp3)

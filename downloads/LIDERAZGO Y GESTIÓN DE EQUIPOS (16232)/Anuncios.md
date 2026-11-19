@@ -1,0 +1,301 @@
+# Anuncios - LIDERAZGO Y GESTIÓN DE EQUIPOS
+
+## BIENVENIDOS A LA SEMANA N° 15
+- **Fecha:** 2026-11-16 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## 📝Inscríbete a la feria laboral UTP Campus Virtual
+- **Fecha:** 2026-11-13 13:32:13 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 14 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-11-13 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 14
+- **Fecha:** 2026-11-09 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 13 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-11-06 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 13
+- **Fecha:** 2026-11-02 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 12 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-10-30 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 12
+- **Fecha:** 2026-10-26 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 11 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-10-23 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 11
+- **Fecha:** 2026-10-19 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 10 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-10-16 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 10
+- **Fecha:** 2026-10-12 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 9 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-10-09 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N°9
+- **Fecha:** 2026-10-05 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 8 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-10-02 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## ESTA SEMANA TENEMOS LA PARTICIPACION N° 2 DE GESTION Y LIDERLAZGO
+- **Fecha:** 2026-09-30 21:12:05 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## ATENTO A TU CRONOGRAMA DE EVALUACIONES
+- **Fecha:** 2026-09-30 20:59:57 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N°8
+- **Fecha:** 2026-09-28 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 7 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-09-25 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N°7
+- **Fecha:** 2026-09-21 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 6 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-09-18 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA  N°6
+- **Fecha:** 2026-09-14 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 5 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-09-11 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## NO TE OLVIDES DE BRINDAR TU OPINION!!!
+- **Fecha:** 2026-09-10 10:00:49 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 5
+- **Fecha:** 2026-09-07 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 4 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-09-04 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## 🔴 (AC-S03-PA1) - Liderazgo y colaboración en equipos - Evaluación Calificada
+- **Fecha:** 2026-08-31 13:52:44 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 4
+- **Fecha:** 2026-08-31 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 3  FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-08-28 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA 3 - PARTICIPACION DE ACTIVIDAD CALIFICADA
+- **Fecha:** 2026-08-24 11:31:09 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA 3
+- **Fecha:** 2026-08-24 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 2 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-08-21 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 2
+- **Fecha:** 2026-08-17 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## SEMANA N° 1 FELICITACION Y MOTIVACION PARA SEGUIR AVANZADO
+- **Fecha:** 2026-08-14 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## GRABACION DE REUNION DEL CURSO
+- **Fecha:** 2026-08-10 22:55:26 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+Reunión de Introducción de Liderazgo.mp4
+
+---
+
+## BIENVENIDOS A LA SEMANA N° 1
+- **Fecha:** 2026-08-10 06:00:00 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## UNETE AL GRUPO DE WHATSAPP DEL CURSO
+- **Fecha:** 2026-08-06 00:23:52 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+Hola, estimados estudiantes 👋
+Con el objetivo de mantenernos siempre comunicados y resolver dudas de manera rápida 💬, los invito a unirse al grupo de WhatsApp oficial del curso 🔐 Liderazgo y Gestión de Equipos / Sección: 16232
+En este grupo podrás:
+
+📢 Recibir anuncios importantes y recordatorios
+📚 Consultar dudas académicas
+🤝 Coordinar tareas y actividades
+⏰ Estar al tanto de las evaluaciones
+ 
+👉 Enlace para unirse al grupo:
+ 
+https://chat.whatsapp.com/H7PgMVzL36Q8YJOutrcpYq
+ 
+⚠️ Nota importante:
+Este grupo es solo para fines académicos 🎓. Se espera un uso respetuoso, responsable y enfocado en el aprendizaje 🤓💻.
+¡Los espero en el grupo para seguir aprendiendo juntos! 🚀
+
+Saludos cordiales,
+PhD Roxana Quiroz Valenzuela
+👩‍🏫 Docente del curso 
+📍 Universidad Tecnológica del Perú (UTP)
+
+---
+
+## PRESENTACIÓN DEL CURSO
+- **Fecha:** 2026-08-06 00:08:26 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## PRESENTACIÓN DE DOCENTE DEL CURSO
+- **Fecha:** 2026-08-05 23:50:54 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+
+
+---
+
+## REUNION DE RECONOCIMIENTO  LUNES 10 A LAS 8:00 PM
+- **Fecha:** 2026-08-02 19:16:04 | **Autor:** ROXANA JANET QUIROZ VALENZUELA
+
+https://utpvirtual.zoom.us/j/87639192003
+
+---
