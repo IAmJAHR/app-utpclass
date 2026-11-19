@@ -1153,8 +1153,8 @@ def main() -> None:
         db.close()
 
     server = ThreadedServer((HOST, PORT), DashboardHandler)
-    # Also listen on port 3000 (Dokploy default domain port) if PORT != 3000
-    extra_ports = [p for p in (3000, 8080, 80) if p != PORT]
+    # Also listen on common Dokploy/Nixpacks default ports (3000, 8080, 8000, 5000, 80)
+    extra_ports = [p for p in (3000, 8080, 8000, 5000, 80) if p != PORT]
     for ep in extra_ports:
         try:
             extra_srv = ThreadedServer((HOST, ep), DashboardHandler)

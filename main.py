@@ -150,9 +150,9 @@ def main() -> None:
     parser.add_argument(
         "command",
         nargs="?",
-        default="sync",
-        choices=["sync", "tasks", "courses", "watch"],
-        help="Acción a ejecutar (por defecto: sync)",
+        default="web",
+        choices=["web", "sync", "tasks", "courses", "watch"],
+        help="Acción a ejecutar (por defecto: web)",
     )
     parser.add_argument(
         "--interval",
@@ -182,6 +182,11 @@ def main() -> None:
         help="Filtrar por nombre o número de clase del curso (ej. --course 12879)",
     )
     args = parser.parse_args()
+
+    if args.command == "web":
+        from app import main as run_web_app
+        run_web_app()
+        return
 
     if args.command == "watch":
         cmd_watch(args.interval)
