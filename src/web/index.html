@@ -3,812 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UTP+ Cloud — IA Local, Calendario & Panel Admin</title>
-  <style>
-    :root {
-      --bg: #09090b;
-      --surface: #121215;
-      --surface-2: #18181c;
-      --surface-hover: #222228;
-      --border: #27272a;
-      --border-light: #3f3f46;
-      --text: #fafafa;
-      --muted: #a1a1aa;
-      --accent: #e11d48;
-      --accent-soft: rgba(225, 29, 72, 0.14);
-      --blue: #3b82f6;
-      --blue-soft: rgba(59, 130, 246, 0.14);
-      --green: #10b981;
-      --green-soft: rgba(16, 185, 129, 0.14);
-      --amber: #f59e0b;
-      --amber-soft: rgba(245, 158, 11, 0.14);
-      --red: #ef4444;
-      --red-soft: rgba(239, 68, 68, 0.14);
-      --purple: #8b5cf6;
-      --purple-soft: rgba(139, 92, 246, 0.15);
-      --radius: 10px;
-      --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    body.light {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --surface-2: #f1f5f9;
-      --surface-hover: #e2e8f0;
-      --border: #e2e8f0;
-      --border-light: #cbd5e1;
-      --text: #0f172a;
-      --muted: #64748b;
-      --shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.45;
-      -webkit-font-smoothing: antialiased;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    /* Full Screen Minimal Login Gate */
-    #loginGate {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .login-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      max-width: 420px;
-      width: 100%;
-      padding: 28px 26px;
-      box-shadow: var(--shadow);
-    }
-    .login-profiles {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin: 14px 0;
-      max-height: 170px;
-      overflow-y: auto;
-    }
-    .login-profile-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 11px;
-      border-radius: 8px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .login-profile-item:hover {
-      border-color: var(--blue);
-      background: var(--surface-hover);
-    }
-
-    /* Top Minimal Navbar */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background: color-mix(in srgb, var(--surface) 88%, transparent);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-mark {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 800;
-      font-size: 13px;
-      display: grid;
-      place-items: center;
-    }
-    .brand-title {
-      font-size: 14.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .brand-sub {
-      font-size: 11.5px;
-      color: var(--muted);
-    }
-
-    .live-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      background: var(--green-soft);
-      color: var(--green);
-      border: 1px solid rgba(16, 185, 129, 0.28);
-    }
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.45; transform: scale(0.9); }
-    }
-
-    .nav-center {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      background: var(--surface-2);
-      padding: 4px;
-      border-radius: 9px;
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .nav-tab {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      padding: 6px 11px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s;
-    }
-    .nav-tab:hover { color: var(--text); }
-    .nav-tab.active {
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .count-chip {
-      font-size: 10px;
-      padding: 1px 6px;
-      border-radius: 99px;
-      background: var(--surface-hover);
-      color: var(--text);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    button, .btn {
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 7px 11px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      text-decoration: none;
-      transition: all 0.15s;
-    }
-    button:hover, .btn:hover {
-      background: var(--surface-hover);
-      border-color: var(--border-light);
-    }
-    .btn-primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .btn-primary:hover {
-      background: #be123c;
-      border-color: #be123c;
-    }
-    .btn-drive {
-      background: var(--blue-soft);
-      border-color: rgba(59, 130, 246, 0.35);
-      color: #60a5fa;
-    }
-    .btn-ai {
-      background: var(--purple-soft);
-      border-color: rgba(139, 92, 246, 0.4);
-      color: #c4b5fd;
-    }
-    .btn-success {
-      background: var(--green-soft);
-      border-color: rgba(16, 185, 129, 0.35);
-      color: var(--green);
-    }
-    .btn-danger {
-      background: var(--red-soft);
-      border-color: rgba(239, 68, 68, 0.35);
-      color: var(--red);
-    }
-    .btn-sm {
-      padding: 4px 9px;
-      font-size: 11.5px;
-      border-radius: 6px;
-    }
-
-    .profile-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 4px 10px 4px 5px;
-      border-radius: 999px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .avatar-circle {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      display: grid;
-      place-items: center;
-    }
-
-    .container {
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 16px 20px 70px;
-    }
-
-    /* Sync progress banner */
-    #syncBanner {
-      display: none;
-      background: var(--surface);
-      border: 1px solid var(--blue);
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      margin-bottom: 14px;
-    }
-    .sync-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .progress-track {
-      height: 5px;
-      background: var(--surface-2);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--blue), var(--green));
-      width: 0%;
-      transition: width 0.25s;
-    }
-    .sync-log {
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-      font-size: 11px;
-      color: var(--muted);
-      max-height: 70px;
-      overflow-y: auto;
-    }
-
-    /* Minimal Stats Strip */
-    .stats-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .stat-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .stat-kicker {
-      font-size: 10.5px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .stat-num {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .stat-foot {
-      font-size: 11px;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Courses split layout */
-    .courses-layout {
-      display: grid;
-      grid-template-columns: 330px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    @media (max-width: 960px) {
-      .courses-layout { grid-template-columns: 1fr; }
-    }
-
-    .sidebar-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .input-field {
-      width: 100%;
-      background: var(--surface-2);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 8px 11px;
-      border-radius: 7px;
-      font-size: 12.5px;
-      outline: none;
-    }
-    .input-field:focus { border-color: var(--blue); }
-
-    .course-card {
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: var(--surface-2);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .course-card:hover { background: var(--surface-hover); }
-    .course-card.selected {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-    .course-name {
-      font-size: 12.5px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .course-sub {
-      font-size: 11px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-    }
-    .mini-bar {
-      height: 3px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .mini-fill { height: 100%; background: var(--green); }
-
-    .detail-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      min-height: 500px;
-    }
-    .detail-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 12px;
-    }
-    .sub-nav {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .sub-btn {
-      padding: 5px 11px;
-      border-radius: 7px;
-      font-size: 12px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-    }
-    .sub-btn.active {
-      background: var(--text);
-      color: var(--bg);
-      border-color: var(--text);
-    }
-
-    .week-item {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-bottom: 8px;
-      overflow: hidden;
-      background: var(--surface-2);
-    }
-    .week-head {
-      padding: 9px 13px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .week-head:hover { background: var(--surface-hover); }
-    .week-body {
-      display: none;
-      padding: 10px 13px;
-      border-top: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .week-item.open .week-body { display: block; }
-    .theme-group { margin-bottom: 10px; }
-    .theme-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 5px;
-      text-transform: uppercase;
-    }
-    .resource-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 9px;
-      border-radius: 6px;
-      background: var(--surface-2);
-      margin-bottom: 4px;
-      font-size: 12px;
-      gap: 8px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 10.5px;
-      font-weight: 600;
-    }
-    .badge-red { background: var(--red-soft); color: var(--red); }
-    .badge-amber { background: var(--amber-soft); color: var(--amber); }
-    .badge-green { background: var(--green-soft); color: var(--green); }
-    .badge-blue { background: var(--blue-soft); color: #60a5fa; }
-    .badge-purple { background: var(--purple-soft); color: #c4b5fd; }
-    .badge-muted { background: var(--surface-hover); color: var(--muted); }
-
-    .clean-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    .clean-table th, .clean-table td {
-      text-align: left;
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .clean-table th {
-      color: var(--muted);
-      font-size: 10.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 12px;
-    }
-    .min-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    /* Local AI Chat Layout */
-    .ai-container {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    @media (max-width: 900px) {
-      .ai-container { grid-template-columns: 1fr; }
-    }
-    .ai-chat-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-      overflow: hidden;
-    }
-    .ai-messages {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .ai-msg {
-      max-width: 88%;
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 12.5px;
-      line-height: 1.5;
-    }
-    .ai-msg.user {
-      align-self: flex-end;
-      background: var(--accent);
-      color: #fff;
-      border-bottom-right-radius: 2px;
-    }
-    .ai-msg.bot {
-      align-self: flex-start;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-bottom-left-radius: 2px;
-      width: 100%;
-    }
-    .ai-input-bar {
-      padding: 12px;
-      border-top: 1px solid var(--border);
-      background: var(--surface-2);
-      display: flex;
-      gap: 8px;
-    }
-    .chip-btn {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 10px;
-      border-radius: 99px;
-      font-size: 11.5px;
-      cursor: pointer;
-      text-align: left;
-    }
-    .chip-btn:hover {
-      border-color: var(--purple);
-      background: var(--purple-soft);
-    }
-
-    /* Calendar Grid Layout */
-    .calendar-layout {
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    @media (max-width: 980px) {
-      .calendar-layout { grid-template-columns: 1fr; }
-    }
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      margin-top: 10px;
-    }
-    .cal-day-head {
-      text-align: center;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      padding: 4px 0;
-    }
-    .cal-cell {
-      min-height: 68px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 5px 6px;
-      font-size: 11.5px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      transition: all 0.12s;
-    }
-    .cal-cell:hover { border-color: var(--blue); }
-    .cal-cell.today {
-      border-color: var(--accent);
-      box-shadow: inset 0 0 0 1px var(--accent);
-    }
-    .cal-cell.selected {
-      background: var(--blue-soft);
-      border-color: var(--blue);
-    }
-    .cal-cell.other-month { opacity: 0.35; }
-    .cal-dot-item {
-      font-size: 10px;
-      padding: 1px 4px;
-      border-radius: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-weight: 600;
-    }
-
-    /* Admin Two-Column Layout */
-    .admin-grid {
-      display: grid;
-      grid-template-columns: 1.35fr 1fr;
-      gap: 16px;
-      align-items: start;
-    }
-    @media (max-width: 1024px) {
-      .admin-grid { grid-template-columns: 1fr; }
-    }
-    .section-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .section-title { font-size: 14px; font-weight: 700; }
-    .section-desc { font-size: 11.5px; color: var(--muted); }
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    /* Modals & Lock Screen */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 18px;
-    }
-    .modal-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      max-width: 780px;
-      width: 100%;
-      max-height: 85vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .modal-head {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 700;
-      font-size: 13.5px;
-    }
-    .modal-body {
-      padding: 16px;
-      overflow-y: auto;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-    .modal-body.white-reader {
-      background: #ffffff;
-      color: #0f172a;
-    }
-
-    #lockOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(9, 9, 11, 0.95);
-      backdrop-filter: blur(10px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 250;
-      padding: 20px;
-    }
-    .lock-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      max-width: 420px;
-      width: 100%;
-      padding: 26px;
-      text-align: center;
-      box-shadow: var(--shadow);
-    }
-    .toast-box {
-      position: fixed;
-      bottom: 18px;
-      right: 18px;
-      z-index: 350;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .toast {
-      background: var(--surface);
-      border: 1px solid var(--border-light);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      box-shadow: var(--shadow);
-    }
-  </style>
+  <title>UTP+ Cloud — Plataforma Académica & IA Local</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
 </head>
 <body>
 
@@ -837,322 +33,436 @@
     </div>
   </div>
 
-  <header>
-    <div class="brand">
-      <div class="logo-mark">U+</div>
-      <div>
-        <div class="brand-title">
-          <span>UTP+ Cloud</span>
-          <span class="live-pill">
+  <!-- APP SHELL: LEFT SIDEBAR + RIGHT WORKSPACE -->
+  <div class="app-shell">
+    <!-- Left Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-brand">
+        <div class="brand-left">
+          <div class="logo-mark">U+</div>
+          <div>
+            <div class="brand-name">UTP+ Cloud</div>
+            <div class="brand-tag">7mo Ciclo · Drive Sync</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group">
+          <div class="nav-group-label">Académico</div>
+          <button class="side-item active" id="navDashboard" onclick="switchView('dashboard')">
+            <span class="side-item-left"><span>📊</span><span>Resumen General</span></span>
+          </button>
+          <button class="side-item" id="navCourses" onclick="switchView('courses')">
+            <span class="side-item-left"><span>📚</span><span>Cursos y Semanas</span></span>
+            <span class="side-badge" id="chipCourses">8</span>
+          </button>
+          <button class="side-item" id="navTasks" onclick="switchView('tasks')">
+            <span class="side-item-left"><span>📝</span><span>Tareas y Evaluaciones</span></span>
+            <span class="side-badge" id="chipTasks" style="background:var(--amber-soft); color:var(--amber);">0</span>
+          </button>
+          <button class="side-item" id="navAnnouncements" onclick="switchView('announcements')">
+            <span class="side-item-left"><span>📢</span><span>Anuncios Docentes</span></span>
+            <span class="side-badge" id="chipAnnouncements">0</span>
+          </button>
+          <button class="side-item" id="navCalendar" onclick="switchView('calendar')">
+            <span class="side-item-left"><span>📅</span><span>Calendario y Clases</span></span>
+            <span class="side-badge" id="chipCalendar">0</span>
+          </button>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Inteligencia & Cloud</div>
+          <button class="side-item" id="navAi" onclick="switchView('ai')">
+            <span class="side-item-left"><span>🤖</span><span>Asistente IA Local</span></span>
+            <span class="side-badge" style="background:var(--purple-soft); color:#c4b5fd;">IA</span>
+          </button>
+          <button class="side-item" id="navDrive" onclick="switchView('drive')">
+            <span class="side-item-left"><span>☁️</span><span>Google Drive</span></span>
+            <span class="side-badge" id="chipDrive" style="background:var(--green-soft); color:var(--green);">779</span>
+          </button>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Administración</div>
+          <button class="side-item" id="navAdmin" onclick="switchView('admin')">
+            <span class="side-item-left"><span>🛡️</span><span>Perfiles y Admin</span></span>
+            <span class="side-badge" id="chipOnline">1</span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-mini" onclick="openLoginGate()" title="Cambiar de perfil">
+          <div class="avatar-circle" id="currentUserAvatar">A</div>
+          <div style="overflow:hidden;">
+            <div class="user-mini-name" id="currentUserName">Admin</div>
+            <div class="user-mini-role" id="currentUserRole">🛡️ Administrador</div>
+          </div>
+        </div>
+        <button class="btn-danger btn-sm" onclick="logoutSession()" title="Cerrar sesión">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Right Area -->
+    <div class="main-area">
+      <!-- Top Contextual Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-sm mobile-toggle" onclick="toggleMobileSidebar()">☰ Menú</button>
+          <div>
+            <div class="view-title" id="topbarTitle">📊 Resumen General</div>
+            <div class="view-subtitle" id="topbarSubtitle">Vista ejecutiva de tus cursos, entregas próximas, agenda y anuncios</div>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <span class="live-pill" title="Conectado en tiempo real (Server-Sent Events)">
             <span class="live-dot"></span>
             <span id="liveUsersCount">1 en línea</span>
           </span>
+          <button class="btn-ai btn-sm" onclick="switchView('ai')">🤖 Preguntar a IA</button>
+          <a class="btn btn-drive btn-sm" id="headerDriveBtn" href="https://drive.google.com/drive/folders/1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx?hl=es-419" target="_blank" rel="noopener">
+            ☁️ Abrir Drive
+          </a>
+          <button class="btn-sm" onclick="toggleTheme()" title="Cambiar tema Claro / Oscuro">🌓</button>
         </div>
-        <div class="brand-sub" id="studentInfo">Conectado a Google Drive & UTP+</div>
-      </div>
-    </div>
+      </header>
 
-    <nav class="nav-center">
-      <button class="nav-tab active" id="tabCourses" onclick="switchView('courses')">
-        📚 Cursos <span class="count-chip" id="chipCourses">0</span>
-      </button>
-      <button class="nav-tab" id="tabAi" onclick="switchView('ai')">
-        🤖 IA Local UTP+ <span class="count-chip" style="background:var(--purple-soft); color:#c4b5fd;">Chat</span>
-      </button>
-      <button class="nav-tab" id="tabCalendar" onclick="switchView('calendar')">
-        📅 Calendario & Clases <span class="count-chip" id="chipCalendar">0</span>
-      </button>
-      <button class="nav-tab" id="tabTasks" onclick="switchView('tasks')">
-        ⏰ Pendientes <span class="count-chip" id="chipTasks">0</span>
-      </button>
-      <button class="nav-tab" id="tabDrive" onclick="switchView('drive')">
-        ☁️ Drive <span class="count-chip" id="chipDrive">779</span>
-      </button>
-      <button class="nav-tab" id="tabAdmin" onclick="switchView('admin')">
-        🛡️ Admin <span class="count-chip" id="chipOnline">1</span>
-      </button>
-    </nav>
+      <!-- Workspace Views Container -->
+      <main class="workspace-content">
 
-    <div class="header-right">
-      <a class="btn btn-drive btn-sm" id="headerDriveBtn" href="https://drive.google.com/drive/folders/1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx?hl=es-419" target="_blank" rel="noopener">
-        ☁️ Drive
-      </a>
-      <button class="btn-sm" onclick="toggleTheme()" title="Tema Claro / Oscuro">🌓</button>
-      <div class="profile-pill" onclick="openLoginGate()" title="Cambiar de usuario">
-        <div class="avatar-circle" id="currentUserAvatar">A</div>
-        <span id="currentUserName">Admin</span>
-      </div>
-      <button class="btn-danger btn-sm" onclick="logoutSession()" title="Cerrar sesión">🚪 Salir</button>
-    </div>
-  </header>
-
-  <div class="container">
-    <!-- Real-Time Sync Banner -->
-    <div id="syncBanner">
-      <div class="sync-top">
-        <span id="syncTitle">Sincronizando...</span>
-        <span id="syncCount">0/0</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="syncFill"></div>
-      </div>
-      <div class="sync-log" id="syncLog"></div>
-    </div>
-
-    <!-- Minimalist KPI Bar -->
-    <div class="stats-strip">
-      <div class="stat-box" style="cursor:pointer;" onclick="switchView('courses')">
-        <div class="stat-kicker"><span>Cursos Activos</span><span>📚</span></div>
-        <div class="stat-num" id="statCourses">-</div>
-        <div class="stat-foot" id="statDataSource">Google Drive Cloud</div>
-      </div>
-      <div class="stat-box" style="cursor:pointer;" onclick="switchView('ai')">
-        <div class="stat-kicker"><span>Asistente IA Local</span><span>🤖</span></div>
-        <div class="stat-num" style="color:#c4b5fd; font-size:18px; margin-top:3px;">Pregúntame de la U</div>
-        <div class="stat-foot">Semanas, temas, sílabos y agenda</div>
-      </div>
-      <div class="stat-box" style="cursor:pointer;" onclick="switchView('calendar')">
-        <div class="stat-kicker"><span>Calendario y Entregas</span><span>📅</span></div>
-        <div class="stat-num" id="statTasks" style="color:var(--amber);">-</div>
-        <div class="stat-foot" id="statNextDeadline">Revisando agenda...</div>
-      </div>
-      <div class="stat-box" style="cursor:pointer;" onclick="switchView('drive')">
-        <div class="stat-kicker"><span>Archivos en Google Drive</span><span>☁️</span></div>
-        <div class="stat-num" id="statFiles" style="color:var(--green);">-</div>
-        <div class="stat-foot" id="statProfileRole">Conectado en tiempo real</div>
-      </div>
-    </div>
-
-    <!-- VIEW 1: COURSES & MATERIALS -->
-    <div id="viewCourses" class="courses-layout">
-      <div class="sidebar-panel">
-        <input type="text" class="input-field" id="courseSearchInput" placeholder="🔍 Buscar curso o clase..." oninput="renderCoursesList()" />
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted); padding:2px 4px;">
-          <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
-            <input type="checkbox" id="chkAllCycles" onchange="loadOverview(false)" />
-            Ciclos pasados
-          </label>
-          <a href="#" onclick="askAiAboutSelectedCourse(); return false;" style="color:#c4b5fd; text-decoration:none; font-weight:600;">🤖 Resumen IA</a>
-        </div>
-        <div id="courseList" style="display:flex; flex-direction:column; gap:6px;"></div>
-      </div>
-
-      <div class="detail-panel" id="courseDetail"></div>
-    </div>
-
-    <!-- VIEW 2: LOCAL UNIVERSITY AI ASSISTANT -->
-    <div id="viewAi" style="display:none;">
-      <div class="ai-container">
-        <div class="section-card" style="margin-bottom:0;">
-          <div class="section-title" style="margin-bottom:6px;">🤖 IA Local UTP+</div>
-          <div class="section-desc" style="margin-bottom:12px;">
-            Conoce tus 8 cursos, las 18 semanas, los 779 archivos en Drive, sílabos, anuncios y tareas, y puede agendar recordatorios en tu calendario.
-          </div>
-          <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:8px;">Preguntas rápidas:</div>
-          <div style="display:flex; flex-direction:column; gap:6px;" id="aiQuickPrompts">
-            <button class="chip-btn" onclick="sendAiPrompt('¿Qué pasó en la semana 15?')">📅 ¿Qué pasó en la semana 15?</button>
-            <button class="chip-btn" onclick="sendAiPrompt('¿Qué pasó en la semana 14?')">📅 ¿Qué pasó en la semana 14?</button>
-            <button class="chip-btn" onclick="sendAiPrompt('¿Qué vimos en la semana 12 de Seguridad Informática?')">🛡️ Semana 12 de Seguridad Informática</button>
-            <button class="chip-btn" onclick="sendAiPrompt('¿Qué tareas o entregas pendientes tengo?')">⏰ ¿Qué tareas pendientes tengo?</button>
-            <button class="chip-btn" onclick="sendAiPrompt('¿Qué dijeron los profesores en los últimos anuncios?')">📢 Últimos anuncios de mis profesores</button>
-            <button class="chip-btn" onclick="sendAiPrompt('¿Quiénes son mis profesores y sus sílabos?')">👨‍🏫 Mis profesores, correos y sílabos</button>
-            <button class="chip-btn" onclick="sendAiPrompt('Recuérdame mañana a las 18:00 estudiar Seguridad Informática')">📌 Agendar recordatorio para mañana 18:00</button>
-          </div>
-        </div>
-
-        <div class="ai-chat-panel">
-          <div class="ai-messages" id="aiMessages">
-            <div class="ai-msg bot">
-              <div style="font-weight:700; margin-bottom:4px; color:#c4b5fd;">🤖 Asistente Local UTP+</div>
-              Hola 👋 Tengo indexados todos tus cursos, semanas, separatas en Google Drive, tareas y anuncios de <strong>UTP+class</strong>.<br/>
-              Pregúntame por ejemplo: <em>"¿Qué pasó en la semana 14?"</em>, <em>"¿Qué tareas vencen pronto?"</em> o pídeme: <em>"Recuérdame el viernes a las 19:00 repasar Integrador"</em>.
+        <!-- VIEW 1: DASHBOARD (RESUMEN GENERAL) -->
+        <section id="viewDashboard">
+          <div class="stats-strip">
+            <div class="stat-box" style="cursor:pointer;" onclick="switchView('courses')">
+              <div class="stat-kicker"><span>Cursos Activos</span><span>📚</span></div>
+              <div class="stat-num" id="statCourses">-</div>
+              <div class="stat-foot">7mo Ciclo · Temarios y sílabos</div>
+            </div>
+            <div class="stat-box" style="cursor:pointer;" onclick="switchView('tasks')">
+              <div class="stat-kicker"><span>Entregas Pendientes</span><span>📝</span></div>
+              <div class="stat-num" id="statTasks" style="color:var(--amber);">-</div>
+              <div class="stat-foot">Tareas y evaluaciones</div>
+            </div>
+            <div class="stat-box" style="cursor:pointer;" onclick="switchView('announcements')">
+              <div class="stat-kicker"><span>Anuncios Docentes</span><span>📢</span></div>
+              <div class="stat-num" id="statAnnouncements" style="color:var(--blue);">-</div>
+              <div class="stat-foot">Comunicados oficiales</div>
+            </div>
+            <div class="stat-box" style="cursor:pointer;" onclick="switchView('drive')">
+              <div class="stat-kicker"><span>Archivos en Google Drive</span><span>☁️</span></div>
+              <div class="stat-num" id="statFiles" style="color:var(--green);">-</div>
+              <div class="stat-foot">Sincronizados en utp_7mociclo</div>
             </div>
           </div>
-          <div class="ai-input-bar">
-            <input type="text" class="input-field" id="aiInput" placeholder="Pregúntale algo de la U (ej. ¿Qué pasó en la semana 13? o Recuérdame mañana a las 5pm...)" onkeydown="if(event.key==='Enter')sendAiPrompt()" />
-            <button class="btn-primary" onclick="sendAiPrompt()">Enviar ↵</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- VIEW 3: CALENDAR, CLASSES & REMINDERS -->
-    <div id="viewCalendar" style="display:none;">
-      <div class="calendar-layout">
-        <!-- Left: Interactive Monthly Calendar Grid -->
-        <div class="section-card">
-          <div class="section-head">
+          <div class="dashboard-grid">
             <div>
-              <div class="section-title" id="calMonthTitle">📅 Calendario Académico UTP+</div>
-              <div class="section-desc">Combina entregas de UTP+class, tus clases y recordatorios personales.</div>
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">⏰ Próximas Entregas Urgentes</div>
+                    <div class="section-desc">Actividades pendientes de entrega en UTP+class</div>
+                  </div>
+                  <button class="btn-sm" onclick="switchView('tasks')">Ver todas →</button>
+                </div>
+                <div id="dashPendingList" style="display:flex; flex-direction:column; gap:6px;"></div>
+              </div>
+
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">📢 Últimos Anuncios de Profesores</div>
+                    <div class="section-desc">Avisos recientes publicados en tus cursos</div>
+                  </div>
+                  <button class="btn-sm" onclick="switchView('announcements')">Ver todos →</button>
+                </div>
+                <div id="dashAnnouncementsList" style="display:flex; flex-direction:column; gap:6px;"></div>
+              </div>
             </div>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <button class="btn-sm" onclick="changeCalMonth(-1)">◀</button>
-              <button class="btn-sm" onclick="resetCalToday()">Hoy</button>
-              <button class="btn-sm" onclick="changeCalMonth(1)">▶</button>
-              <a class="btn btn-drive btn-sm" href="/api/calendar/ics" target="_blank">⬇️ Exportar .ICS</a>
+
+            <div>
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">📚 Mis Cursos Activos</div>
+                    <div class="section-desc">Haz clic en un curso para abrir sus semanas y materiales</div>
+                  </div>
+                  <button class="btn-sm" onclick="switchView('courses')">Explorar →</button>
+                </div>
+                <div id="dashCoursesList" style="display:flex; flex-direction:column; gap:6px;"></div>
+              </div>
             </div>
           </div>
+        </section>
 
-          <div class="cal-grid" id="calGrid"></div>
-        </div>
+        <!-- VIEW 2: COURSES & WEEKS ONLY (CLEAN & SEPARATED) -->
+        <section id="viewCourses" class="courses-layout" style="display:none;">
+          <div class="sidebar-panel">
+            <input type="text" class="input-field" id="courseSearchInput" placeholder="🔍 Buscar curso o clase..." oninput="renderCoursesList()" />
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted); padding:2px 4px;">
+              <label style="display:flex; align-items:center; gap:5px; cursor:pointer;">
+                <input type="checkbox" id="chkAllCycles" onchange="loadOverview(false)" />
+                Incluir ciclos pasados
+              </label>
+            </div>
+            <div id="courseList" style="display:flex; flex-direction:column; gap:6px;"></div>
+          </div>
 
-        <!-- Right: Add Class / Reminder & Agenda List -->
-        <div>
+          <div class="detail-panel" id="courseDetail"></div>
+        </section>
+
+        <!-- VIEW 3: DEDICATED TASKS & EVALUATIONS -->
+        <section id="viewTasks" style="display:none;">
+          <div class="filter-bar">
+            <select class="input-field" style="max-width:280px;" id="taskCourseFilter" onchange="renderEvaluationsView()"></select>
+            <select class="input-field" style="max-width:220px;" id="taskStatusFilter" onchange="renderEvaluationsView()">
+              <option value="all">📋 Todas las actividades</option>
+              <option value="pending">⏰ Solo pendientes</option>
+              <option value="graded">✅ Entregadas / Calificadas</option>
+            </select>
+            <input type="text" class="input-field" style="flex:1; min-width:200px;" id="taskSearchInput" placeholder="🔍 Buscar tarea, práctica o evaluación..." oninput="renderEvaluationsView()" />
+          </div>
+
+          <div id="pendingTasksSection" class="section-card">
+            <div class="section-head">
+              <div>
+                <div class="section-title">⏰ Entregas Pendientes en Agenda</div>
+                <div class="section-desc">Actividades próximas a vencer ordenadas por urgencia</div>
+              </div>
+            </div>
+            <div class="cards-grid" id="tasksGrid"></div>
+          </div>
+
           <div class="section-card">
             <div class="section-head">
               <div>
-                <div class="section-title">➕ Agregar Recordatorio o Clase al Calendario</div>
-                <div class="section-desc">Se sincroniza en tiempo real y puedes exportarlo con 1 clic a Google Calendar.</div>
+                <div class="section-title">📝 Historial de Tareas, Evaluaciones y Notas por Curso</div>
+                <div class="section-desc">Todas las evaluaciones registradas, sus indicaciones y calificaciones</div>
               </div>
             </div>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <input type="text" class="input-field" id="remTitle" placeholder="Título (ej. Clase Zoom Integrador / Estudiar Parcial)" />
-              <div class="form-row" style="margin-top:0;">
-                <select class="input-field" id="remCourse"></select>
-                <select class="input-field" id="remCategory">
-                  <option value="clase">🎓 Clase</option>
-                  <option value="recordatorio">📌 Recordatorio</option>
-                  <option value="tarea">📝 Tarea / Entrega</option>
-                  <option value="examen">🚨 Examen / Práctica</option>
-                </select>
-              </div>
-              <div class="form-row" style="margin-top:0;">
-                <input type="date" class="input-field" id="remDate" />
-                <input type="time" class="input-field" id="remTime" value="18:00" />
-                <select class="input-field" id="remRecurrence">
-                  <option value="none">Una sola vez</option>
-                  <option value="weekly">Repetir cada semana</option>
-                </select>
-              </div>
-              <button class="btn-primary" style="justify-content:center;" onclick="addCalendarReminder()">
-                📅 Guardar en Calendario UTP+
-              </button>
-            </div>
+            <div class="cards-grid" id="evaluationsGrid"></div>
+          </div>
+        </section>
+
+        <!-- VIEW 4: DEDICATED TEACHER ANNOUNCEMENTS -->
+        <section id="viewAnnouncements" style="display:none;">
+          <div class="filter-bar">
+            <select class="input-field" style="max-width:300px;" id="annCourseFilter" onchange="renderAnnouncementsView()"></select>
+            <input type="text" class="input-field" style="flex:1; min-width:220px;" id="annSearchInput" placeholder="🔍 Buscar en anuncios (ej. Zoom, examen, grupo, nota)..." oninput="renderAnnouncementsView()" />
           </div>
 
+          <div id="globalAnnouncementsList"></div>
+        </section>
+
+        <!-- VIEW 5: CALENDAR, CLASSES & REMINDERS -->
+        <section id="viewCalendar" style="display:none;">
+          <div class="calendar-layout">
+            <div class="section-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-title" id="calMonthTitle">📅 Calendario Académico UTP+</div>
+                  <div class="section-desc">Tus clases, entregas de UTP+class y recordatorios en un solo lugar</div>
+                </div>
+                <div style="display:flex; gap:6px; align-items:center;">
+                  <button class="btn-sm" onclick="changeCalMonth(-1)">◀</button>
+                  <button class="btn-sm" onclick="resetCalToday()">Hoy</button>
+                  <button class="btn-sm" onclick="changeCalMonth(1)">▶</button>
+                  <a class="btn btn-drive btn-sm" href="/api/calendar/ics" target="_blank">⬇️ Exportar .ICS</a>
+                </div>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
+
+            <div>
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">➕ Agendar Clase o Recordatorio</div>
+                    <div class="section-desc">Guárdalo en tu calendario y sincronízalo con Google Calendar</div>
+                  </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <input type="text" class="input-field" id="remTitle" placeholder="Título (ej. Clase Zoom Integrador / Estudiar Parcial)" />
+                  <div class="form-row" style="margin-top:0;">
+                    <select class="input-field" id="remCourse"></select>
+                    <select class="input-field" id="remCategory">
+                      <option value="clase">🎓 Clase</option>
+                      <option value="recordatorio">📌 Recordatorio</option>
+                      <option value="tarea">📝 Tarea / Entrega</option>
+                      <option value="examen">🚨 Examen / Práctica</option>
+                    </select>
+                  </div>
+                  <div class="form-row" style="margin-top:0;">
+                    <input type="date" class="input-field" id="remDate" />
+                    <input type="time" class="input-field" id="remTime" value="18:00" />
+                    <select class="input-field" id="remRecurrence">
+                      <option value="none">Una sola vez</option>
+                      <option value="weekly">Cada semana</option>
+                    </select>
+                  </div>
+                  <button class="btn-primary" style="justify-content:center;" onclick="addCalendarReminder()">
+                    📅 Guardar en Calendario
+                  </button>
+                </div>
+              </div>
+
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">📌 Agenda de Eventos</div>
+                    <div class="section-desc" id="calSelectedDateLabel">Mostrando todos los eventos</div>
+                  </div>
+                  <button class="btn-sm" onclick="Store.calFilterDate=''; renderCalendar();">Ver Todos</button>
+                </div>
+                <div id="calendarEventsList" style="display:flex; flex-direction:column; gap:8px; max-height:380px; overflow-y:auto;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 6: LOCAL UNIVERSITY AI ASSISTANT -->
+        <section id="viewAi" style="display:none;">
+          <div class="ai-container">
+            <div class="section-card" style="margin-bottom:0;">
+              <div class="section-title" style="margin-bottom:6px;">🤖 Consultas Sugeridas</div>
+              <div class="section-desc" style="margin-bottom:12px;">
+                Haz clic en cualquiera o escribe tu propia pregunta sobre semanas, temas, archivos o recordatorios:
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="chip-btn" onclick="sendAiPrompt('¿Qué pasó en la semana 15?')">📅 ¿Qué pasó en la semana 15?</button>
+                <button class="chip-btn" onclick="sendAiPrompt('¿Qué pasó en la semana 14?')">📅 ¿Qué pasó en la semana 14?</button>
+                <button class="chip-btn" onclick="sendAiPrompt('¿Qué vimos en la semana 12 de Seguridad Informática?')">🛡️ Semana 12 de Seguridad Informática</button>
+                <button class="chip-btn" onclick="sendAiPrompt('¿Qué tareas o entregas pendientes tengo?')">⏰ ¿Qué tareas pendientes tengo?</button>
+                <button class="chip-btn" onclick="sendAiPrompt('¿Qué dijeron los profesores en los últimos anuncios?')">📢 Últimos anuncios de mis profesores</button>
+                <button class="chip-btn" onclick="sendAiPrompt('¿Quiénes son mis profesores y sus sílabos?')">👨‍🏫 Mis profesores, correos y sílabos</button>
+                <button class="chip-btn" onclick="sendAiPrompt('Recuérdame mañana a las 18:00 estudiar Seguridad Informática')">📌 Agendar recordatorio mañana 18:00</button>
+              </div>
+            </div>
+
+            <div class="ai-chat-panel">
+              <div class="ai-messages" id="aiMessages">
+                <div class="ai-msg bot">
+                  <div style="font-weight:700; margin-bottom:4px; color:#c4b5fd;">🤖 Asistente Local UTP+</div>
+                  Hola 👋 Tengo indexados tus <strong>8 cursos, las 18 semanas, los 779 archivos de Google Drive, sílabos, tareas y anuncios</strong>.<br/>
+                  Pregúntame qué se hizo en cualquier semana o pídeme que agende un recordatorio en tu calendario.
+                </div>
+              </div>
+              <div class="ai-input-bar">
+                <input type="text" class="input-field" id="aiInput" placeholder="Pregúntale algo de la U (ej. ¿Qué pasó en la semana 14? o Recuérdame mañana a las 6pm...)" onkeydown="if(event.key==='Enter')sendAiPrompt()" />
+                <button class="btn-primary" onclick="sendAiPrompt()">Enviar ↵</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 7: GOOGLE DRIVE CLOUD -->
+        <section id="viewDrive" style="display:none;">
           <div class="section-card">
             <div class="section-head">
               <div>
-                <div class="section-title">📌 Agenda de Clases, Recordatorios y Entregas</div>
-                <div class="section-desc" id="calSelectedDateLabel">Mostrando todos los eventos próximos</div>
+                <div class="section-title">☁️ Biblioteca Google Drive (`utp_7mociclo`)</div>
+                <div class="section-desc">Carpeta ID: <code id="driveFolderIdLabel" style="color:var(--blue);">1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx</code></div>
               </div>
-              <button class="btn-sm" onclick="STATE.calFilterDate=''; renderCalendar();">Ver Todos</button>
-            </div>
-            <div id="calendarEventsList" style="display:flex; flex-direction:column; gap:8px; max-height:380px; overflow-y:auto;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW 4: PENDING TASKS -->
-    <div id="viewTasks" style="display:none;">
-      <div class="cards-grid" id="tasksGrid"></div>
-    </div>
-
-    <!-- VIEW 5: GOOGLE DRIVE CLOUD -->
-    <div id="viewDrive" style="display:none;">
-      <div class="section-card">
-        <div class="section-head">
-          <div>
-            <div class="section-title">☁️ Almacenamiento Google Drive (`utp_7mociclo`)</div>
-            <div class="section-desc">Carpeta ID: <code id="driveFolderIdLabel" style="color:var(--blue);">1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx</code></div>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <a class="btn btn-drive" id="driveDirectLink" href="https://drive.google.com/drive/folders/1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx?hl=es-419" target="_blank" rel="noopener">
-              ↗ Abrir Carpeta en Google Drive
-            </a>
-            <button class="btn-primary" onclick="triggerDriveSync()">🔄 Sincronizar con Google Drive</button>
-          </div>
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <input type="text" class="input-field" placeholder="🔍 Buscar entre los 779 archivos subidos a Google Drive..." oninput="filterDriveTable(this.value)" />
-        </div>
-
-        <div style="max-height:460px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;">
-          <table class="clean-table" id="driveFilesTable">
-            <thead>
-              <tr>
-                <th>Curso</th>
-                <th>Carpeta / Semana</th>
-                <th>Archivo</th>
-                <th>Tamaño</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="driveFilesTbody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- VIEW 6: PROFILES & ADMIN PANEL -->
-    <div id="viewAdmin" style="display:none;">
-      <div class="admin-grid">
-        <div>
-          <div class="section-card">
-            <div class="section-head">
-              <div>
-                <div class="section-title">🟢 Control de Usuarios y Perfiles en Tiempo Real</div>
-                <div class="section-desc">Conecta o desconecta usuarios en vivo. Si desconectas a alguien, su sesión se bloquea al instante.</div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a class="btn btn-drive" id="driveDirectLink" href="https://drive.google.com/drive/folders/1nU0cJhO6IHaTBgoA80EzZsLxPMWB4ulx?hl=es-419" target="_blank" rel="noopener">
+                  ↗ Abrir Carpeta en Google Drive
+                </a>
+                <button class="btn-primary" onclick="triggerDriveSync()">🔄 Sincronizar con Google Drive</button>
               </div>
-              <span class="badge badge-green" id="adminOnlineBadge">1 conectado</span>
             </div>
 
-            <div style="overflow-x:auto;">
-              <table class="clean-table">
+            <div style="margin-bottom:12px;">
+              <input type="text" class="input-field" placeholder="🔍 Buscar entre los 779 archivos en Google Drive..." oninput="filterDriveTable(this.value)" />
+            </div>
+
+            <div style="max-height:480px; overflow-y:auto; border:1px solid var(--border); border-radius:8px;">
+              <table class="clean-table" id="driveFilesTable">
                 <thead>
                   <tr>
-                    <th>Perfil / Usuario</th>
-                    <th>Rol</th>
-                    <th>Clave / PIN</th>
-                    <th>Estado</th>
-                    <th>Acceso</th>
-                    <th>Acción Admin</th>
+                    <th>Curso</th>
+                    <th>Carpeta / Semana</th>
+                    <th>Archivo</th>
+                    <th>Tamaño</th>
+                    <th>Acción</th>
                   </tr>
                 </thead>
-                <tbody id="adminUsersTbody"></tbody>
+                <tbody id="driveFilesTbody"></tbody>
               </table>
             </div>
+          </div>
+        </section>
 
-            <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
-              <div style="font-size:12.5px; font-weight:700; margin-bottom:6px;">➕ Crear o Actualizar Perfil de Usuario</div>
-              <div class="form-row">
-                <input type="text" class="input-field" id="newUsername" placeholder="Usuario (ej. compañero1)" />
-                <input type="text" class="input-field" id="newName" placeholder="Nombre visible" />
-                <input type="text" class="input-field" id="newCode" placeholder="Clave / PIN" />
-                <select class="input-field" id="newRole">
-                  <option value="user">Rol: Usuario</option>
-                  <option value="admin">Rol: Admin</option>
-                </select>
-                <button class="btn-primary" onclick="saveWebUser()">Guardar Perfil</button>
+        <!-- VIEW 8: PROFILES & ADMIN PANEL -->
+        <section id="viewAdmin" style="display:none;">
+          <div class="admin-grid">
+            <div>
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">🟢 Control de Usuarios en Tiempo Real</div>
+                    <div class="section-desc">Conecta o desconecta usuarios al instante mediante Server-Sent Events.</div>
+                  </div>
+                  <span class="badge badge-green" id="adminOnlineBadge">1 en línea</span>
+                </div>
+
+                <div style="overflow-x:auto;">
+                  <table class="clean-table">
+                    <thead>
+                      <tr>
+                        <th>Perfil / Usuario</th>
+                        <th>Rol</th>
+                        <th>Clave / PIN</th>
+                        <th>Estado</th>
+                        <th>Acceso</th>
+                        <th>Acción Admin</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminUsersTbody"></tbody>
+                  </table>
+                </div>
+
+                <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                  <div style="font-size:12.5px; font-weight:700; margin-bottom:6px;">➕ Crear o Actualizar Perfil de Usuario</div>
+                  <div class="form-row">
+                    <input type="text" class="input-field" id="newUsername" placeholder="Usuario" />
+                    <input type="text" class="input-field" id="newName" placeholder="Nombre visible" />
+                    <input type="text" class="input-field" id="newCode" placeholder="Clave / PIN" />
+                    <select class="input-field" id="newRole">
+                      <option value="user">Rol: Usuario</option>
+                      <option value="admin">Rol: Admin</option>
+                    </select>
+                    <button class="btn-primary" onclick="saveWebUser()">Guardar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">🎓 Cuentas UTP+class Vinculadas</div>
+                    <div class="section-desc">Administra las cuentas de estudiante conectadas al sistema.</div>
+                  </div>
+                </div>
+                <div id="utpProfilesList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
+                <div style="padding-top:12px; border-top:1px solid var(--border);">
+                  <div style="font-size:12.5px; font-weight:700; margin-bottom:6px;">➕ Agregar Cuenta UTP+class</div>
+                  <div class="form-row">
+                    <input type="text" class="input-field" id="utpUser" placeholder="Código UTP" />
+                    <input type="password" class="input-field" id="utpPass" placeholder="Contraseña UTP+" />
+                    <input type="text" class="input-field" id="utpLabel" placeholder="Etiqueta" />
+                    <button class="btn-primary" onclick="saveUtpProfile()">Vincular</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div>
-          <div class="section-card">
-            <div class="section-head">
-              <div>
-                <div class="section-title">🎓 Cuentas UTP+class Vinculadas</div>
-                <div class="section-desc">Conecta o desconecta cuentas de estudiante UTP+.</div>
-              </div>
-            </div>
-            <div id="utpProfilesList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
-            <div style="padding-top:12px; border-top:1px solid var(--border);">
-              <div style="font-size:12.5px; font-weight:700; margin-bottom:6px;">➕ Agregar Cuenta UTP+class</div>
-              <div class="form-row">
-                <input type="text" class="input-field" id="utpUser" placeholder="Código UTP" />
-                <input type="password" class="input-field" id="utpPass" placeholder="Contraseña UTP+" />
-                <input type="text" class="input-field" id="utpLabel" placeholder="Etiqueta" />
-                <button class="btn-primary" onclick="saveUtpProfile()">Vincular</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
 
@@ -1181,962 +491,6 @@
 
   <div class="toast-box" id="toastBox"></div>
 
-  <script>
-    const nowDt = new Date();
-    let STATE = {
-      token: localStorage.getItem('utp_session_token') || '',
-      currentUser: null,
-      profiles: [],
-      presence: { online_count: 1, users: [], utp_profiles: [] },
-      courses: [],
-      tasks: [],
-      selectedCourse: null,
-      courseData: null,
-      subTab: 'weeks',
-      currentView: 'courses',
-      driveStatus: null,
-      calendar: { reminders: [], deadlines: [] },
-      calYear: nowDt.getFullYear(),
-      calMonth: nowDt.getMonth(),
-      calFilterDate: '',
-    };
-
-    let sseSource = null;
-
-    function showToast(msg) {
-      const box = document.getElementById('toastBox');
-      const el = document.createElement('div');
-      el.className = 'toast';
-      el.textContent = msg;
-      box.appendChild(el);
-      setTimeout(() => el.remove(), 3800);
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('light');
-      localStorage.setItem('utp_theme', document.body.classList.contains('light') ? 'light' : 'dark');
-    }
-    if (localStorage.getItem('utp_theme') === 'light') {
-      document.body.classList.add('light');
-    }
-
-    function apiHeaders() {
-      const h = { 'Content-Type': 'application/json' };
-      if (STATE.token) h['X-Session-Token'] = STATE.token;
-      return h;
-    }
-
-    // -----------------------------------------------------------------------
-    // 1. Login Gate & Auth Session
-    // -----------------------------------------------------------------------
-    async function initSession() {
-      document.getElementById('remDate').value = new Date().toISOString().slice(0, 10);
-      const res = await fetch(`/api/auth/session?token=${encodeURIComponent(STATE.token)}`);
-      const data = await res.json();
-      STATE.profiles = data.profiles || [];
-      renderGateProfiles();
-
-      if (data.authenticated && data.user) {
-        STATE.currentUser = data.user;
-        document.getElementById('loginGate').style.display = 'none';
-        updateCurrentUserBadge();
-        setLockedState(!data.is_allowed);
-        connectRealtimeSSE();
-        await loadOverview(false);
-        loadDriveStatus();
-        loadCalendarData();
-      } else {
-        document.getElementById('loginGate').style.display = 'flex';
-      }
-    }
-
-    function renderGateProfiles() {
-      const el = document.getElementById('gateProfilesList');
-      el.innerHTML = (STATE.profiles || []).map(p => `
-        <div class="login-profile-item" onclick="selectGateProfile('${p.username}')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <div class="avatar-circle" style="background:${p.avatar_color || '#e11d48'}">${(p.name||p.username)[0].toUpperCase()}</div>
-            <div>
-              <div style="font-size:12.5px; font-weight:700;">${p.name}</div>
-              <div style="font-size:11px; color:var(--muted);">@${p.username} · ${p.role === 'admin' ? '🛡️ Admin' : '👤 Usuario'}</div>
-            </div>
-          </div>
-          <span class="badge ${p.is_allowed ? 'badge-green' : 'badge-red'}">${p.is_allowed ? 'Activo' : 'Bloqueado'}</span>
-        </div>
-      `).join('');
-    }
-
-    function selectGateProfile(username) {
-      document.getElementById('gateUsername').value = username;
-      const pw = document.getElementById('gatePassword');
-      if (username === 'invitado') {
-        pw.value = 'utp2026';
-      } else {
-        pw.value = '';
-      }
-      pw.focus();
-    }
-
-    function openLoginGate() {
-      renderGateProfiles();
-      document.getElementById('gateError').style.display = 'none';
-      document.getElementById('loginGate').style.display = 'flex';
-    }
-
-    async function submitGateLogin() {
-      const username = document.getElementById('gateUsername').value.trim();
-      const access_code = document.getElementById('gatePassword').value.trim();
-      const errEl = document.getElementById('gateError');
-      errEl.style.display = 'none';
-
-      if (!username) {
-        errEl.textContent = 'Selecciona o escribe tu usuario.';
-        errEl.style.display = 'block';
-        return;
-      }
-
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ username, access_code })
-      });
-      const data = await res.json();
-      if (!data.ok) {
-        errEl.textContent = data.error || 'Credenciales incorrectas';
-        errEl.style.display = 'block';
-        return;
-      }
-
-      STATE.token = data.token;
-      localStorage.setItem('utp_session_token', data.token);
-      STATE.currentUser = data.user;
-      document.getElementById('loginGate').style.display = 'none';
-      setLockedState(false);
-      updateCurrentUserBadge();
-      showToast(`👋 Bienvenido, ${data.user.name}`);
-      connectRealtimeSSE();
-      await loadOverview(false);
-      loadDriveStatus();
-      loadCalendarData();
-    }
-
-    async function logoutSession() {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ token: STATE.token })
-      });
-      STATE.token = '';
-      STATE.currentUser = null;
-      localStorage.removeItem('utp_session_token');
-      if (sseSource) sseSource.close();
-      openLoginGate();
-    }
-
-    function updateCurrentUserBadge() {
-      const u = STATE.currentUser;
-      if (!u) return;
-      document.getElementById('currentUserName').textContent = u.name;
-      const av = document.getElementById('currentUserAvatar');
-      av.textContent = (u.name || u.username || 'U')[0].toUpperCase();
-      av.style.background = u.avatar_color || '#e11d48';
-      document.getElementById('statProfileRole').textContent =
-        `Sesión: ${u.name} (${u.role === 'admin' ? 'Admin' : 'Usuario'})`;
-    }
-
-    function setLockedState(isLocked, reason) {
-      const overlay = document.getElementById('lockOverlay');
-      if (isLocked) {
-        if (reason) document.getElementById('lockReason').textContent = reason;
-        overlay.style.display = 'flex';
-      } else {
-        overlay.style.display = 'none';
-      }
-    }
-
-    // -----------------------------------------------------------------------
-    // 2. Real-Time Engine (SSE)
-    // -----------------------------------------------------------------------
-    function connectRealtimeSSE() {
-      if (sseSource) sseSource.close();
-      sseSource = new EventSource(`/api/events?token=${encodeURIComponent(STATE.token)}`);
-
-      sseSource.addEventListener('presence_update', (e) => {
-        const snap = JSON.parse(e.data);
-        STATE.presence = snap;
-        STATE.profiles = snap.users || STATE.profiles;
-        updatePresenceUI(snap);
-      });
-
-      sseSource.addEventListener('user_access_changed', (e) => {
-        const payload = JSON.parse(e.data);
-        if (STATE.currentUser && (STATE.currentUser.id === payload.user_id || STATE.currentUser.username === payload.username)) {
-          STATE.currentUser.is_allowed = payload.is_allowed;
-          if (!payload.is_allowed) {
-            setLockedState(true, `El Administrador ha desconectado a @${payload.username} en tiempo real.`);
-            showToast('⚠️ Tu sesión fue desconectada por el Administrador');
-          } else {
-            setLockedState(false);
-            showToast('🟢 El Administrador ha reconectado tu acceso');
-            loadOverview(false);
-          }
-        }
-      });
-
-      sseSource.addEventListener('calendar_updated', () => {
-        loadCalendarData();
-      });
-
-      sseSource.addEventListener('sync_status', (e) => {
-        renderSyncBanner(JSON.parse(e.data));
-      });
-
-      sseSource.addEventListener('data_updated', () => {
-        loadOverview(false);
-        loadDriveStatus();
-      });
-    }
-
-    function updatePresenceUI(snap) {
-      const cnt = snap.online_count || 1;
-      document.getElementById('liveUsersCount').textContent = `${cnt} en línea`;
-      document.getElementById('chipOnline').textContent = cnt;
-      document.getElementById('adminOnlineBadge').textContent = `${cnt} en línea ahora`;
-      renderAdminPanel();
-    }
-
-    setInterval(() => {
-      if (STATE.token) {
-        fetch('/api/presence/ping', {
-          method: 'POST',
-          headers: apiHeaders(),
-          body: JSON.stringify({ token: STATE.token, view: STATE.currentView })
-        }).then(r => {
-          if (r.status === 403) setLockedState(true);
-        }).catch(() => {});
-      }
-    }, 25000);
-
-    // -----------------------------------------------------------------------
-    // 3. View Switcher & Overview
-    // -----------------------------------------------------------------------
-    function switchView(view) {
-      STATE.currentView = view;
-      ['courses', 'ai', 'calendar', 'tasks', 'drive', 'admin'].forEach(v => {
-        const cap = v.charAt(0).toUpperCase() + v.slice(1);
-        const tabEl = document.getElementById(`tab${cap}`);
-        if (tabEl) tabEl.classList.toggle('active', v === view);
-        const viewEl = document.getElementById(`view${cap}`);
-        if (viewEl) {
-          viewEl.style.display = v === view ? (v === 'courses' ? 'grid' : 'block') : 'none';
-        }
-      });
-      if (view === 'calendar') loadCalendarData();
-      if (view === 'drive') loadDriveStatus();
-      if (view === 'admin') renderAdminPanel();
-      if (view === 'ai') document.getElementById('aiInput').focus();
-    }
-
-    async function loadOverview(forceLive = false) {
-      const allCycles = document.getElementById('chkAllCycles').checked ? '1' : '0';
-      const liveParam = forceLive ? '1' : '0';
-      const res = await fetch(`/api/overview?all_cycles=${allCycles}&live=${liveParam}&token=${encodeURIComponent(STATE.token)}`);
-      const data = await res.json();
-      if (data.disconnected_by_admin) {
-        setLockedState(true, data.error);
-        return;
-      }
-      if (data.error) return;
-
-      STATE.courses = data.courses || [];
-      STATE.tasks = data.tasks || [];
-      if (data.presence) {
-        STATE.presence = data.presence;
-        updatePresenceUI(data.presence);
-      }
-
-      const st = data.student || {};
-      document.getElementById('studentInfo').textContent =
-        `${st.name || 'UTP+ Cloud'} · ${data.data_source || 'Google Drive'}`;
-      document.getElementById('statDataSource').textContent = data.data_source || 'Google Drive Cloud';
-
-      document.getElementById('statCourses').textContent = STATE.courses.length;
-      document.getElementById('chipCourses').textContent = STATE.courses.length;
-      document.getElementById('statTasks').textContent = STATE.tasks.length;
-      document.getElementById('chipTasks').textContent = STATE.tasks.length;
-
-      const totalFiles = STATE.courses.reduce((acc, c) => acc + (c.downloadedCount || 0), 0);
-      document.getElementById('statFiles').textContent = totalFiles;
-
-      if (STATE.tasks.length > 0) {
-        const first = STATE.tasks[0];
-        document.getElementById('statNextDeadline').textContent =
-          `Próxima: ${(first.finishAt || '').slice(0, 16)} · ${first.courseName}`;
-      } else {
-        document.getElementById('statNextDeadline').textContent = 'Sin entregas urgentes';
-      }
-
-      // Populate course dropdown in Calendar form
-      const remCourseSel = document.getElementById('remCourse');
-      remCourseSel.innerHTML = `<option value="General UTP+">🎓 Curso: General UTP+</option>` +
-        STATE.courses.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-
-      renderCoursesList();
-      renderPendingTasks();
-
-      if (!STATE.selectedCourse && STATE.courses.length > 0) {
-        selectCourse(0);
-      }
-    }
-
-    // -----------------------------------------------------------------------
-    // 4. Local University AI Assistant
-    // -----------------------------------------------------------------------
-    async function sendAiPrompt(presetText) {
-      const input = document.getElementById('aiInput');
-      const query = (presetText !== undefined ? presetText : input.value).trim();
-      if (!query) return;
-      if (presetText === undefined) input.value = '';
-
-      switchView('ai');
-      const msgBox = document.getElementById('aiMessages');
-
-      // Append user message
-      const uDiv = document.createElement('div');
-      uDiv.className = 'ai-msg user';
-      uDiv.textContent = query;
-      msgBox.appendChild(uDiv);
-
-      // Append thinking placeholder
-      const bDiv = document.createElement('div');
-      bDiv.className = 'ai-msg bot';
-      bDiv.innerHTML = `<span style="color:var(--muted);">🤖 Analizando tus cursos, semanas y archivos de la UTP...</span>`;
-      msgBox.appendChild(bDiv);
-      msgBox.scrollTop = msgBox.scrollHeight;
-
-      const res = await fetch('/api/ai/ask', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ query })
-      });
-      const data = await res.json();
-
-      let suggHtml = '';
-      if (data.suggestions && data.suggestions.length) {
-        suggHtml = `<div style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border); display:flex; gap:6px; flex-wrap:wrap;">` +
-          data.suggestions.map(s => `<button class="chip-btn" onclick="sendAiPrompt('${s.replace(/'/g, "\\'")}')">💡 ${s}</button>`).join('') +
-          `</div>`;
-      }
-
-      bDiv.innerHTML = `
-        <div style="font-weight:700; margin-bottom:6px; color:#c4b5fd;">🤖 IA Local UTP+</div>
-        <div>${data.answer_html || 'Sin respuesta.'}</div>
-        ${suggHtml}
-      `;
-      msgBox.scrollTop = msgBox.scrollHeight;
-
-      if (data.reminder_created) {
-        showToast('📅 Recordatorio agregado al Calendario');
-        loadCalendarData();
-      }
-    }
-
-    function askAiAboutSelectedCourse() {
-      const c = STATE.selectedCourse;
-      if (!c) {
-        switchView('ai');
-        return;
-      }
-      const wk = (STATE.courseData && STATE.courseData.currentWeek) || 15;
-      sendAiPrompt(`¿Qué pasó en la semana ${wk} de ${c.name}?`);
-    }
-
-    // -----------------------------------------------------------------------
-    // 5. Calendar, Classes & Reminders
-    // -----------------------------------------------------------------------
-    async function loadCalendarData() {
-      const res = await fetch(`/api/calendar?token=${encodeURIComponent(STATE.token)}`);
-      const data = await res.json();
-      STATE.calendar = {
-        reminders: data.reminders || [],
-        deadlines: data.deadlines || []
-      };
-      const totalEvents = STATE.calendar.reminders.length + STATE.calendar.deadlines.length;
-      document.getElementById('chipCalendar').textContent = totalEvents;
-      renderCalendar();
-    }
-
-    function changeCalMonth(delta) {
-      STATE.calMonth += delta;
-      if (STATE.calMonth > 11) { STATE.calMonth = 0; STATE.calYear++; }
-      if (STATE.calMonth < 0) { STATE.calMonth = 11; STATE.calYear--; }
-      renderCalendar();
-    }
-
-    function resetCalToday() {
-      const d = new Date();
-      STATE.calYear = d.getFullYear();
-      STATE.calMonth = d.getMonth();
-      STATE.calFilterDate = '';
-      renderCalendar();
-    }
-
-    function selectCalDate(dateStr) {
-      STATE.calFilterDate = STATE.calFilterDate === dateStr ? '' : dateStr;
-      document.getElementById('remDate').value = dateStr;
-      renderCalendar();
-    }
-
-    function renderCalendar() {
-      const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      document.getElementById('calMonthTitle').textContent = `📅 ${monthNames[STATE.calMonth]} ${STATE.calYear}`;
-
-      const allEvents = [
-        ...STATE.calendar.reminders.map(r => ({ ...r, source: 'reminder' })),
-        ...STATE.calendar.deadlines.map(d => ({ ...d, source: 'utp' }))
-      ];
-
-      const eventsByDate = {};
-      allEvents.forEach(ev => {
-        const d = ev.event_date;
-        if (!eventsByDate[d]) eventsByDate[d] = [];
-        eventsByDate[d].push(ev);
-      });
-
-      const grid = document.getElementById('calGrid');
-      const dayHeads = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d => `<div class="cal-day-head">${d}</div>`).join('');
-
-      const firstDay = new Date(STATE.calYear, STATE.calMonth, 1);
-      const startOffset = (firstDay.getDay() + 6) % 7; // Monday = 0
-      const daysInMonth = new Date(STATE.calYear, STATE.calMonth + 1, 0).getDate();
-      const todayStr = new Date().toISOString().slice(0, 10);
-
-      let cellsHtml = dayHeads;
-      for (let i = 0; i < startOffset; i++) {
-        cellsHtml += `<div class="cal-cell other-month"></div>`;
-      }
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const dStr = `${STATE.calYear}-${String(STATE.calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const dayEvents = eventsByDate[dStr] || [];
-        const isToday = dStr === todayStr;
-        const isSel = dStr === STATE.calFilterDate;
-
-        const pills = dayEvents.slice(0, 3).map(ev => {
-          const bg = ev.source === 'utp' ? 'var(--amber-soft)' : (ev.category === 'clase' ? 'var(--blue-soft)' : 'var(--green-soft)');
-          const col = ev.source === 'utp' ? 'var(--amber)' : (ev.category === 'clase' ? '#60a5fa' : 'var(--green)');
-          return `<div class="cal-dot-item" style="background:${bg}; color:${col};">${ev.event_time} ${ev.title}</div>`;
-        }).join('');
-
-        cellsHtml += `
-          <div class="cal-cell ${isToday ? 'today' : ''} ${isSel ? 'selected' : ''}" onclick="selectCalDate('${dStr}')">
-            <div style="font-weight:700; display:flex; justify-content:space-between;">
-              <span>${day}</span>
-              ${dayEvents.length > 0 ? `<span style="font-size:10px; color:var(--muted);">${dayEvents.length}</span>` : ''}
-            </div>
-            ${pills}
-          </div>
-        `;
-      }
-      grid.innerHTML = cellsHtml;
-
-      // Render right-hand Agenda List
-      const listEl = document.getElementById('calendarEventsList');
-      const labelEl = document.getElementById('calSelectedDateLabel');
-      let filtered = allEvents.slice().sort((a, b) => `${a.event_date} ${a.event_time}`.localeCompare(`${b.event_date} ${b.event_time}`));
-      if (STATE.calFilterDate) {
-        filtered = filtered.filter(e => e.event_date === STATE.calFilterDate);
-        labelEl.textContent = `Eventos del ${STATE.calFilterDate} (${filtered.length})`;
-      } else {
-        labelEl.textContent = `Todos los eventos y entregas (${filtered.length})`;
-      }
-
-      if (!filtered.length) {
-        listEl.innerHTML = `<div style="color:var(--muted); font-size:12.5px; padding:12px;">No hay clases ni recordatorios para esta fecha.</div>`;
-        return;
-      }
-
-      listEl.innerHTML = filtered.map(ev => {
-        const isUtp = ev.source === 'utp';
-        const badgeClass = isUtp ? 'badge-amber' : (ev.category === 'clase' ? 'badge-blue' : (ev.category === 'examen' ? 'badge-red' : 'badge-green'));
-        return `
-          <div class="resource-row" style="padding:10px 12px; opacity:${ev.completed ? '0.55' : '1'};">
-            <div style="flex:1;">
-              <div style="display:flex; align-items:center; gap:6px; margin-bottom:3px;">
-                <span class="badge ${badgeClass}">${isUtp ? '⏰ ENTREGA UTP+' : ev.category.toUpperCase()}</span>
-                <span style="font-size:11.5px; font-weight:700;">📅 ${ev.event_date} · 🕒 ${ev.event_time}</span>
-                ${ev.recurrence === 'weekly' ? '<span class="badge badge-purple">Semanal</span>' : ''}
-              </div>
-              <div style="font-weight:700; font-size:13px; ${ev.completed ? 'text-decoration:line-through;' : ''}">${ev.title}</div>
-              <div style="font-size:11.5px; color:var(--muted);">🎓 ${ev.course_name || 'General UTP+'}</div>
-            </div>
-            <div style="display:flex; gap:5px; align-items:center;">
-              ${ev.gcal_url ? `<a class="btn btn-drive btn-sm" href="${ev.gcal_url}" target="_blank" title="Añadir a Google Calendar">📅 GCal</a>` : ''}
-              ${!isUtp ? `
-                <button class="btn-sm" onclick="toggleReminder(${ev.id}, ${!ev.completed})" title="Marcar completado">${ev.completed ? '↩️' : '✅'}</button>
-                <button class="btn-danger btn-sm" onclick="deleteReminder(${ev.id})" title="Eliminar">🗑️</button>
-              ` : ''}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    async function addCalendarReminder() {
-      const title = document.getElementById('remTitle').value.trim();
-      const course_name = document.getElementById('remCourse').value;
-      const category = document.getElementById('remCategory').value;
-      const event_date = document.getElementById('remDate').value;
-      const event_time = document.getElementById('remTime').value;
-      const recurrence = document.getElementById('remRecurrence').value;
-
-      if (!title) {
-        showToast('⚠️ Escribe un título para la clase o recordatorio');
-        return;
-      }
-
-      const res = await fetch('/api/calendar/add', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ title, course_name, category, event_date, event_time, recurrence })
-      });
-      const data = await res.json();
-      if (data.ok) {
-        document.getElementById('remTitle').value = '';
-        showToast('✅ Agregado al Calendario UTP+');
-        loadCalendarData();
-      }
-    }
-
-    async function toggleReminder(id, completed) {
-      await fetch('/api/calendar/toggle', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ id, completed })
-      });
-      loadCalendarData();
-    }
-
-    async function deleteReminder(id) {
-      await fetch('/api/calendar/delete', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ id })
-      });
-      showToast('🗑️ Recordatorio eliminado');
-      loadCalendarData();
-    }
-
-    // -----------------------------------------------------------------------
-    // 6. Courses & Materials Explorer
-    // -----------------------------------------------------------------------
-    function renderCoursesList() {
-      const q = (document.getElementById('courseSearchInput').value || '').toLowerCase();
-      const el = document.getElementById('courseList');
-      const filtered = STATE.courses.map((c, idx) => ({ c, idx })).filter(({ c }) =>
-        !q || (c.name || '').toLowerCase().includes(q) || (c.classNumber || '').toLowerCase().includes(q)
-      );
-
-      el.innerHTML = filtered.map(({ c, idx }) => {
-        const isSel = STATE.selectedCourse && STATE.selectedCourse.name === c.name && STATE.selectedCourse.classNumber === c.classNumber;
-        return `
-          <div class="course-card ${isSel ? 'selected' : ''}" onclick="selectCourse(${idx})">
-            <div class="course-name">${c.name}</div>
-            <div class="course-sub">
-              <span>${c.teacher}</span>
-              <span>#${c.classNumber}</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px;">
-              <span style="color:var(--green);">☁️ ${c.downloadedCount} archivos</span>
-              <span>${c.progress || 0}%</span>
-            </div>
-            <div class="mini-bar"><div class="mini-fill" style="width:${Math.min(100, c.progress || 0)}%"></div></div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    async function selectCourse(idx) {
-      const c = STATE.courses[idx];
-      if (!c) return;
-      STATE.selectedCourse = c;
-      renderCoursesList();
-
-      const panel = document.getElementById('courseDetail');
-      panel.innerHTML = `<div style="padding:40px; text-align:center; color:var(--muted); font-size:13px;">Cargando materiales de <strong>${c.name}</strong>...</div>`;
-
-      const qs = new URLSearchParams({
-        courseId: c.courseId || '',
-        sectionId: c.sectionId || '',
-        name: c.name || '',
-        classNumber: c.classNumber || '',
-        token: STATE.token
-      });
-      const res = await fetch(`/api/course?${qs.toString()}`);
-      const data = await res.json();
-      STATE.courseData = data;
-      renderCourseDetail();
-    }
-
-    function setSubTab(tab) {
-      STATE.subTab = tab;
-      renderCourseDetail();
-    }
-
-    function renderCourseDetail() {
-      const c = STATE.selectedCourse;
-      const d = STATE.courseData;
-      if (!c || !d) return;
-
-      const panel = document.getElementById('courseDetail');
-      const sylBtn = d.syllabusUrl
-        ? `<a class="btn btn-sm" href="${d.syllabusUrl}" target="_blank">📄 Sílabo</a>`
-        : '';
-
-      let bodyHtml = '';
-      if (STATE.subTab === 'weeks') {
-        bodyHtml = (d.weeks || []).map((w, i) => `
-          <div class="week-item ${w.weekNumber === d.currentWeek || i === d.weeks.length - 1 ? 'open' : ''}">
-            <div class="week-head" onclick="this.parentElement.classList.toggle('open')">
-              <span>📅 ${w.label} ${w.weekNumber === d.currentWeek ? '<span class="badge badge-green" style="margin-left:6px;">Actual</span>' : ''}</span>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <button class="btn-ai btn-sm" onclick="event.stopPropagation(); sendAiPrompt('¿Qué pasó en la semana ${w.weekNumber} de ${c.name.replace(/'/g, '')}?')">🤖 Qué se hizo</button>
-                <span style="color:var(--muted); font-size:11.5px;">${w.themes.length} tema(s) ▾</span>
-              </div>
-            </div>
-            <div class="week-body">
-              ${w.themes.map(t => `
-                <div class="theme-group">
-                  <div class="theme-label">${t.name}</div>
-                  ${t.contents.map(item => renderContentRow(item)).join('')}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `).join('');
-      } else if (STATE.subTab === 'local') {
-        const files = d.localFiles || [];
-        bodyHtml = `
-          <input type="text" class="input-field" style="margin-bottom:10px;" placeholder="🔍 Filtrar archivos del curso..." oninput="filterCourseFiles(this.value)" />
-          <table class="clean-table" id="courseFilesTable">
-            <thead>
-              <tr><th>Semana / Carpeta</th><th>Archivo</th><th>Tamaño</th><th>Acción</th></tr>
-            </thead>
-            <tbody>
-              ${files.map(f => `
-                <tr>
-                  <td style="color:var(--muted);">${f.folder}</td>
-                  <td style="font-weight:600;">${f.name}</td>
-                  <td style="color:var(--muted);">${f.size_kb} KB</td>
-                  <td style="display:flex; gap:6px;">
-                    ${f.rel_path ? `<a class="btn btn-sm" href="/files/${encodeURI(f.rel_path)}" target="_blank">📄 Abrir</a>` : ''}
-                    ${f.drive_url ? `<a class="btn btn-drive btn-sm" href="${f.drive_url}" target="_blank">☁️ Drive</a>` : ''}
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        `;
-      } else if (STATE.subTab === 'tasks') {
-        bodyHtml = `<div class="cards-grid">` + (d.tasks || []).map((t, idx) => `
-          <div class="min-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="badge ${t.status === 'DELIVERED' || t.status === 'QUALIFIED' ? 'badge-green' : 'badge-amber'}">${t.kind} · ${t.status}</span>
-              <span style="font-size:11.5px; color:var(--muted);">Nota: <strong>${t.score !== null && t.score !== undefined ? t.score : '-'}/${t.topScore || 20}</strong></span>
-            </div>
-            <div style="font-size:13px; font-weight:700;">${t.title}</div>
-            <div style="font-size:11.5px; color:var(--muted);">Cierre: <strong>${t.visibleTo || '-'}</strong></div>
-            ${t.descriptionHtml ? `<div style="margin-top:auto; padding-top:6px;"><button class="btn-sm" onclick="openTaskModal(${idx})">📖 Indicaciones</button></div>` : ''}
-          </div>
-        `).join('') + `</div>`;
-      } else if (STATE.subTab === 'announcements') {
-        bodyHtml = (d.announcements || []).map((a, idx) => `
-          <div class="min-card" style="margin-bottom:8px;">
-            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted);">
-              <span>📣 ${a.author || 'Docente'}</span>
-              <span>${a.publishAt || ''}</span>
-            </div>
-            <div style="font-size:13px; font-weight:700;">${a.title}</div>
-            <div style="font-size:12px; color:var(--muted); white-space:pre-line;">${(a.descriptionText || '').slice(0, 240)}</div>
-            <div><button class="btn-sm" onclick="openAnnouncementModal(${idx})">Ver completo</button></div>
-          </div>
-        `).join('');
-      }
-
-      panel.innerHTML = `
-        <div class="detail-top">
-          <div>
-            <h2 style="font-size:16.5px; font-weight:700;">${c.name}</h2>
-            <div style="font-size:11.5px; color:var(--muted); margin-top:2px;">
-              Clase #${c.classNumber} · ${c.teacher} · Semana ${d.currentWeek || '-'}/${d.numWeeks || 18}
-            </div>
-          </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            ${sylBtn}
-            <button class="btn-ai btn-sm" onclick="askAiAboutSelectedCourse()">🤖 Preguntar a IA sobre este curso</button>
-            <a class="btn btn-drive btn-sm" href="${document.getElementById('headerDriveBtn').href}" target="_blank">☁️ Drive</a>
-          </div>
-        </div>
-
-        <div class="sub-nav">
-          <button class="sub-btn ${STATE.subTab==='weeks'?'active':''}" onclick="setSubTab('weeks')">Semanas (${(d.weeks||[]).length})</button>
-          <button class="sub-btn ${STATE.subTab==='local'?'active':''}" onclick="setSubTab('local')">Archivos Cloud/Local (${(d.localFiles||[]).length})</button>
-          <button class="sub-btn ${STATE.subTab==='tasks'?'active':''}" onclick="setSubTab('tasks')">Tareas y Notas (${(d.tasks||[]).length})</button>
-          <button class="sub-btn ${STATE.subTab==='announcements'?'active':''}" onclick="setSubTab('announcements')">Anuncios (${(d.announcements||[]).length})</button>
-        </div>
-
-        <div>${bodyHtml}</div>
-      `;
-    }
-
-    function renderContentRow(item) {
-      let action = '';
-      if (item.html) {
-        const encoded = encodeURIComponent(item.html);
-        const titleEnc = encodeURIComponent(item.title || 'Contenido');
-        action = `<button class="btn-sm" onclick="openRawModal('${titleEnc}', '${encoded}')">👁️ Leer</button>`;
-      } else if (item.url) {
-        const isDrive = String(item.url).includes('drive.google.com');
-        action = `<a class="btn ${isDrive ? 'btn-drive' : ''} btn-sm" href="${item.url}" target="_blank">${isDrive ? '☁️ Drive' : '↗ Abrir'}</a>`;
-      }
-      return `
-        <div class="resource-row">
-          <div style="display:flex; align-items:center; gap:7px; overflow:hidden;">
-            <span class="badge badge-blue">${item.type}</span>
-            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title}</span>
-          </div>
-          <div>${action}</div>
-        </div>
-      `;
-    }
-
-    function filterCourseFiles(q) {
-      const term = q.toLowerCase();
-      document.querySelectorAll('#courseFilesTable tbody tr').forEach(tr => {
-        tr.style.display = tr.textContent.toLowerCase().includes(term) ? '' : 'none';
-      });
-    }
-
-    // -----------------------------------------------------------------------
-    // 7. Pending Tasks, Google Drive & Admin Panel
-    // -----------------------------------------------------------------------
-    function urgencyBadge(hoursLeft) {
-      if (hoursLeft === null || hoursLeft === undefined) return `<span class="badge badge-muted">Sin fecha</span>`;
-      if (hoursLeft <= 0) return `<span class="badge badge-red">Vencida</span>`;
-      if (hoursLeft <= 24) return `<span class="badge badge-red">🔴 ${hoursLeft.toFixed(1)}h</span>`;
-      if (hoursLeft <= 72) return `<span class="badge badge-amber">🟡 ${(hoursLeft/24).toFixed(1)}d</span>`;
-      return `<span class="badge badge-green">🟢 ${(hoursLeft/24).toFixed(1)}d</span>`;
-    }
-
-    function renderPendingTasks() {
-      const grid = document.getElementById('tasksGrid');
-      if (!STATE.tasks.length) {
-        grid.innerHTML = `<div style="color:var(--muted); padding:20px;">🎉 No tienes actividades pendientes.</div>`;
-        return;
-      }
-      grid.innerHTML = STATE.tasks.map(t => `
-        <div class="min-card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            ${urgencyBadge(t.hours_left)}
-            <span class="badge badge-blue">${t.type} · Sem ${t.weekNumber || '-'}</span>
-          </div>
-          <div style="font-size:11.5px; color:var(--muted); font-weight:600;">${t.courseName}</div>
-          <div style="font-size:14px; font-weight:700;">${t.activityTitle}</div>
-          <div style="font-size:11.5px; color:var(--muted); margin-top:auto; padding-top:8px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-            <span>Vence: <strong style="color:var(--text);">${(t.finishAt || '-').slice(0, 16)}</strong></span>
-            <button class="btn-ai btn-sm" onclick="sendAiPrompt('Recuérdame mañana a las 17:00 entregar ${t.activityTitle.replace(/'/g, '')}')">📅 Recordarme</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    async function loadDriveStatus() {
-      const res = await fetch(`/api/gdrive/status?token=${encodeURIComponent(STATE.token)}`);
-      const data = await res.json();
-      STATE.driveStatus = data;
-
-      document.getElementById('driveFolderIdLabel').textContent = data.folder_id;
-      document.getElementById('driveDirectLink').href = data.folder_url;
-      document.getElementById('headerDriveBtn').href = data.folder_url;
-      document.getElementById('chipDrive').textContent = data.indexed_drive_files || data.local_files_count || '779';
-
-      const tbody = document.getElementById('driveFilesTbody');
-      const files = data.files || [];
-      tbody.innerHTML = files.map(f => `
-        <tr>
-          <td style="font-weight:600;">${f.course_folder}</td>
-          <td style="color:var(--muted);">${f.folder_path}</td>
-          <td>${f.name}</td>
-          <td style="color:var(--muted);">${f.size_kb} KB</td>
-          <td style="display:flex; gap:6px;">
-            <a class="btn btn-drive btn-sm" href="${f.web_view_link}" target="_blank">☁️ Abrir en Drive</a>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function filterDriveTable(q) {
-      const term = q.toLowerCase();
-      document.querySelectorAll('#driveFilesTbody tr').forEach(tr => {
-        tr.style.display = tr.textContent.toLowerCase().includes(term) ? '' : 'none';
-      });
-    }
-
-    async function triggerDriveSync() {
-      showToast('☁️ Sincronizando con Google Drive...');
-      await fetch('/api/gdrive/sync', { method: 'POST', headers: apiHeaders() });
-    }
-
-    function renderAdminPanel() {
-      const users = (STATE.presence && STATE.presence.users) || [];
-      const utpProfiles = (STATE.presence && STATE.presence.utp_profiles) || [];
-
-      const tbody = document.getElementById('adminUsersTbody');
-      tbody.innerHTML = users.map(u => {
-        const onlineBadge = u.online
-          ? `<span class="badge badge-green">● En línea (${u.active_sessions})</span>`
-          : `<span class="badge badge-muted">○ Offline</span>`;
-        const accessBadge = u.is_allowed
-          ? `<span class="badge badge-blue">Habilitado</span>`
-          : `<span class="badge badge-red">Desconectado</span>`;
-        const toggleBtn = u.is_allowed
-          ? `<button class="btn-danger btn-sm" onclick="toggleWebUser(${u.id}, false)">🔌 Desconectar</button>`
-          : `<button class="btn-success btn-sm" onclick="toggleWebUser(${u.id}, true)">⚡ Conectar</button>`;
-
-        return `
-          <tr>
-            <td>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <div class="avatar-circle" style="background:${u.avatar_color || '#3b82f6'}">${(u.name||u.username)[0].toUpperCase()}</div>
-                <div>
-                  <div style="font-weight:700;">${u.name}</div>
-                  <div style="font-size:11px; color:var(--muted);">@${u.username}</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="badge ${u.role === 'admin' ? 'badge-amber' : 'badge-muted'}">${u.role.toUpperCase()}</span></td>
-            <td><code style="font-size:11px; color:var(--muted);">${u.access_code || '-'}</code></td>
-            <td>${onlineBadge}</td>
-            <td>${accessBadge}</td>
-            <td style="display:flex; gap:6px;">
-              ${toggleBtn}
-              <button class="btn-sm" onclick="deleteWebUser(${u.id})">🗑️</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const utpEl = document.getElementById('utpProfilesList');
-      utpEl.innerHTML = utpProfiles.map(p => `
-        <div class="resource-row" style="padding:10px 12px;">
-          <div>
-            <div style="font-weight:700; font-size:12.5px;">
-              ${p.label || p.username}
-              ${p.is_active && p.is_connected ? '<span class="badge badge-green" style="margin-left:6px;">Activa</span>' : ''}
-            </div>
-            <div style="font-size:11px; color:var(--muted);">Código: <strong>${p.username}</strong></div>
-          </div>
-          <div style="display:flex; gap:6px;">
-            ${p.is_connected
-              ? `<button class="btn-danger btn-sm" onclick="toggleUtpProfile(${p.id}, false, false)">Desconectar</button>`
-              : `<button class="btn-success btn-sm" onclick="toggleUtpProfile(${p.id}, true, true)">Conectar</button>`
-            }
-          </div>
-        </div>
-      `).join('');
-    }
-
-    async function toggleWebUser(userId, allow) {
-      const res = await fetch('/api/admin/users/toggle', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ user_id: userId, is_allowed: allow })
-      });
-      const data = await res.json();
-      if (!data.ok) {
-        showToast('⚠️ ' + (data.error || 'Requiere cuenta Admin'));
-        return;
-      }
-      showToast(allow ? '🟢 Usuario conectado en tiempo real' : '🔌 Usuario desconectado en tiempo real');
-    }
-
-    async function saveWebUser() {
-      const username = document.getElementById('newUsername').value.trim();
-      const name = document.getElementById('newName').value.trim();
-      const access_code = document.getElementById('newCode').value.trim();
-      const role = document.getElementById('newRole').value;
-      if (!username) return;
-      const res = await fetch('/api/admin/users/save', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ username, name: name || username, access_code: access_code || '1234', role, is_allowed: true })
-      });
-      const data = await res.json();
-      if (data.ok) {
-        document.getElementById('newUsername').value = '';
-        document.getElementById('newName').value = '';
-        document.getElementById('newCode').value = '';
-        showToast('✅ Perfil creado');
-      }
-    }
-
-    async function deleteWebUser(userId) {
-      await fetch('/api/admin/users/delete', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ user_id: userId })
-      });
-    }
-
-    async function toggleUtpProfile(profileId, isConnected, makeActive) {
-      await fetch('/api/admin/utp-profiles/toggle', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ profile_id: profileId, is_connected: isConnected, make_active: makeActive })
-      });
-    }
-
-    async function saveUtpProfile() {
-      const username = document.getElementById('utpUser').value.trim();
-      const password = document.getElementById('utpPass').value.trim();
-      const label = document.getElementById('utpLabel').value.trim();
-      if (!username) return;
-      await fetch('/api/admin/utp-profiles/save', {
-        method: 'POST',
-        headers: apiHeaders(),
-        body: JSON.stringify({ username, password, label, make_active: true })
-      });
-      showToast('✅ Cuenta UTP+ guardada');
-    }
-
-    function openRawModal(titleEnc, htmlEnc) {
-      document.getElementById('contentModalTitle').textContent = decodeURIComponent(titleEnc);
-      document.getElementById('contentModalBody').innerHTML = decodeURIComponent(htmlEnc);
-      document.getElementById('contentModal').style.display = 'flex';
-    }
-    function openTaskModal(idx) {
-      const t = STATE.courseData.tasks[idx];
-      document.getElementById('contentModalTitle').textContent = t.title;
-      document.getElementById('contentModalBody').innerHTML = t.descriptionHtml || '<p>Sin descripción.</p>';
-      document.getElementById('contentModal').style.display = 'flex';
-    }
-    function openAnnouncementModal(idx) {
-      const a = STATE.courseData.announcements[idx];
-      document.getElementById('contentModalTitle').textContent = a.title;
-      document.getElementById('contentModalBody').innerHTML = a.descriptionHtml || '<p>Sin contenido.</p>';
-      document.getElementById('contentModal').style.display = 'flex';
-    }
-    function closeContentModal() {
-      document.getElementById('contentModal').style.display = 'none';
-    }
-
-    function renderSyncBanner(st) {
-      const banner = document.getElementById('syncBanner');
-      if (!st) return;
-      banner.style.display = st.running ? 'block' : 'none';
-    }
-
-    initSession();
-  </script>
+  <script src="/static/js/app.js"></script>
 </body>
 </html>

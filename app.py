@@ -27,8 +27,10 @@ from src.downloader import (
     strip_html,
     sync_course,
 )
+from src.core.events import event_bus
+from src.core.session_manager import SessionRegistry
 from src.gdrive import (
-     _index_local_files_as_drive_mirror,
+    _index_local_files_as_drive_mirror,
     check_gdrive_status,
     extract_folder_id,
     get_folder_url,
@@ -37,9 +39,12 @@ from src.gdrive import (
     sync_from_gdrive,
 )
 from src.local_ai import answer_question, build_gcal_url
+from src.services.calendar_service import CalendarService
+from src.services.catalog_service import CatalogService
 from src.storage import StateDB
 
 WEB_DIR = Path(__file__).resolve().parent / "src" / "web"
+session_registry = SessionRegistry(event_bus)
 
 # ---------------------------------------------------------------------------
 # Real-time State: Sync, Presence & Server-Sent Events (SSE)
@@ -374,12 +379,28 @@ class DashboardHandler(BaseHTTPRequestHandler):
             )
             return
 
-        # 2. Frontend UI
+        # 2. Frontend UI & Modular Static Assets (CSS / JS)
         if path in ("/", "/index.html"):
             html_file = WEB_DIR / "index.html"
             raw = html_file.read_bytes()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(raw)))
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+            self.wfile.write(raw)
+            return
+
+        if path.startswith("/static/"):
+            rel_asset = path[len("/static/"):]
+            asset_path = (WEB_DIR / rel_asset).resolve()
+            if not str(asset_path).startswith(str(WEB_DIR.resolve())) or not asset_path.is_file():
+                self.send_error(404, "Asset no encontrado")
+                return
+            ctype, _ = mimetypes.guess_type(str(asset_path))
+            raw = asset_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", (ctype or "text/plain") + "; charset=utf-8")
             self.send_header("Content-Length", str(len(raw)))
             self.send_header("Cache-Control", "no-cache")
             self.end_headers()
@@ -483,44 +504,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path == "/api/calendar":
             db = StateDB()
             try:
-                reminders = db.list_reminders()
-                for r in reminders:
-                    r["gcal_url"] = build_gcal_url(
-                        r["title"],
-                        r["event_date"],
-                        r["event_time"],
-                        f"Curso: {r.get('course_name', '')} | {r.get('notes', '')}",
-                    )
-                cat = parse_local_catalog(db)
-                deadlines = []
-                for t in cat["tasks"]:
-                    fin = (t.get("finishAt") or "").strip()
-                    if len(fin) >= 10 and fin[0].isdigit():
-                        d_str = fin[:10]
-                        t_str = fin[11:16] if len(fin) >= 16 else "23:59"
-                        deadlines.append(
-                            {
-                                "id": f"utp-{t.get('activityTitle','')}",
-                                "title": f"[{t.get('type','TAREA')}] {t.get('activityTitle','')}",
-                                "course_name": t.get("courseName", ""),
-                                "category": "tarea",
-                                "event_date": d_str,
-                                "event_time": t_str,
-                                "source": "utp",
-                                "gcal_url": build_gcal_url(
-                                    f"[{t.get('type','TAREA')}] {t.get('activityTitle','')}",
-                                    d_str,
-                                    t_str,
-                                    f"Curso UTP+: {t.get('courseName', '')}",
-                                ),
-                            }
-                        )
-                self._send_json(
-                    {
-                        "reminders": reminders,
-                        "deadlines": deadlines,
-                    }
-                )
+                self._send_json(CalendarService.get_calendar_payload(db))
             finally:
                 db.close()
             return
@@ -528,43 +512,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path == "/api/calendar/ics":
             db = StateDB()
             try:
-                reminders = db.list_reminders()
-                cat = parse_local_catalog(db)
-                ics_lines = [
-                    "BEGIN:VCALENDAR",
-                    "VERSION:2.0",
-                    "PRODID:-//UTP+ Cloud Panel//ES",
-                    "CALSCALE:GREGORIAN",
-                    "X-WR-CALNAME:UTP+ Clases y Entregas",
-                ]
-                for r in reminders:
-                    dt_clean = r["event_date"].replace("-", "") + "T" + r["event_time"].replace(":", "") + "00"
-                    ics_lines.extend(
-                        [
-                            "BEGIN:VEVENT",
-                            f"UID:rem-{r['id']}@utpcloud",
-                            f"DTSTART:{dt_clean}",
-                            f"SUMMARY:{r['title']} ({r.get('course_name', 'UTP+')})",
-                            f"DESCRIPTION:{r.get('notes', '')}",
-                            "END:VEVENT",
-                        ]
-                    )
-                for idx, t in enumerate(cat["tasks"]):
-                    fin = (t.get("finishAt") or "").strip()
-                    if len(fin) >= 10 and fin[0].isdigit():
-                        d_str = fin[:10].replace("-", "")
-                        t_str = (fin[11:16] if len(fin) >= 16 else "23:59").replace(":", "")
-                        ics_lines.extend(
-                            [
-                                "BEGIN:VEVENT",
-                                f"UID:utptask-{idx}@utpcloud",
-                                f"DTSTART:{d_str}T{t_str}00",
-                                f"SUMMARY:[{t.get('type','UTP')}] {t.get('activityTitle','')} - {t.get('courseName','')}",
-                                "END:VEVENT",
-                            ]
-                        )
-                ics_lines.append("END:VCALENDAR")
-                raw = "\r\n".join(ics_lines).encode("utf-8")
+                raw = CalendarService.export_ics(db)
                 self.send_response(200)
                 self.send_header("Content-Type", "text/calendar; charset=utf-8")
                 self.send_header("Content-Disposition", 'attachment; filename="utp_calendario.ics"')
@@ -625,9 +573,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 if not db.list_gdrive_files():
                     db.replace_gdrive_files(_index_local_files_as_drive_mirror(gdrive_folder_id))
 
-                local_cat = parse_local_catalog(db)
-                courses_out = local_cat["courses"]
-                tasks_out = local_cat["tasks"]
+                global_feed = CatalogService.get_global_feed(db)
+                courses_out = global_feed["courses"]
+                tasks_out = global_feed["pending_tasks"]
+                all_evaluations = global_feed["all_evaluations"]
+                all_announcements = global_feed["all_announcements"]
                 data_source = "Google Drive / Local Cache"
                 student_info = {
                     "name": (active_utp.get("student_name") or active_utp.get("label") or "Datos Google Drive")
@@ -693,6 +643,8 @@ class DashboardHandler(BaseHTTPRequestHandler):
                         },
                         "courses": courses_out,
                         "tasks": tasks_out,
+                        "evaluations": all_evaluations,
+                        "announcements": all_announcements,
                         "sync": st,
                         "presence": get_presence_snapshot(db),
                         "download_dir": str(DOWNLOAD_DIR),
