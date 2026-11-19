@@ -5,7 +5,6 @@ import time
 from typing import Any, Dict, Optional
 
 import requests
-from playwright.sync_api import sync_playwright
 
 from .config import (
     CLASS_URL,
@@ -111,6 +110,14 @@ def login_with_playwright(
     captured_token: Dict[str, Any] = {}
     captured_meta: Dict[str, str] = {}
     student_re = re.compile(r"api-pao\.utpxpedition\.com/(?:learning|course)/student/([0-9a-f-]{36})/")
+
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        raise RuntimeError(
+            "Playwright no está instalado en este contenedor ligero. "
+            "Usa la sincronización desde Google Drive."
+        )
 
     with sync_playwright() as p:
         browser = p.chromium.launch(

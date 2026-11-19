@@ -1153,6 +1153,16 @@ def main() -> None:
         db.close()
 
     server = ThreadedServer((HOST, PORT), DashboardHandler)
+    # Also listen on port 3000 (Dokploy default domain port) if PORT != 3000
+    extra_ports = [p for p in (3000, 8080, 80) if p != PORT]
+    for ep in extra_ports:
+        try:
+            extra_srv = ThreadedServer((HOST, ep), DashboardHandler)
+            threading.Thread(target=extra_srv.serve_forever, daemon=True).start()
+            print(f"  Listening (extra port for Dokploy): http://{HOST}:{ep}")
+        except Exception:
+            pass
+
     local_url = f"http://127.0.0.1:{PORT}"
     print("====================================================")
     print(f"  UTP+class Cloud & Admin Panel iniciado")
